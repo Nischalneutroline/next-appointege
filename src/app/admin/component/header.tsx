@@ -1,9 +1,10 @@
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import UserProfile from "@/app/components/header/userprofile";
-import CountryFlag from "@/app/components/header/CountryFlags";
-import HeaderSearch from "@/app/components/header/HeaderSearch";
+import UserProfile from "@/app/components/header/UserProfile";
+
+import HeaderSearch from "../../components/header/HeaderSearch";
 import HeaderTitle from "@/app/components/header/HeaderTitle";
+import CountryFlag from "@/app/components/header/CountryFlags";
 interface HeaderProps {
   icon: React.ReactNode;
   pageTitle: string;
@@ -19,7 +20,7 @@ const Header = (props: HeaderProps) => {
           <HeaderTitle
             icon={
               <HomeRoundedIcon
-                sx={{ fontSize: "30px" }}
+                sx={{ fontSize: "25px" }}
                 className="text-white"
               />
             }

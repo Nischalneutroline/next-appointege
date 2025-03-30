@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import Header from "./components/header";
-import Sidebar from "./components/sidebar";
+import Header from "./component/header";
+import Sidebar from "./component/sidebar";
 import HomeIcon from "@mui/icons-material/Home";
 
 export default function AdminLayout({

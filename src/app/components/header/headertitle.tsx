@@ -15,11 +15,11 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
   return (
     <div className="flex gap-3 justify-between items-center px-2">
       {icon}
-      <span className="text-[19px] text-white font-[600] leading-[30px] -tracking-[2%]">
+      <span className="flex items-end text-[19px] text-white font-[600] leading-[30px] -tracking-[2%]">
         {pageTitle}
       </span>
       <div onClick={() => onToggleMenu()}>
-        <MenuIcon sx={{ fontSize: "28px" }} className="text-white" />
+        <MenuIcon sx={{ fontSize: "25px" }} className="text-white" />
       </div>
     </div>
   );
