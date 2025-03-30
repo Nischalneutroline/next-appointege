@@ -6,11 +6,11 @@ const HeaderSearch = () => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <div className="relative h-[55px]">
+    <div className="relative h-[50px]">
       {!isFocused && (
         <SearchRoundedIcon
           sx={{ fontSize: 35 }}
-          className="absolute text-[#287AFF] flex items-center top-3 left-2 transition-opacity duration-200"
+          className="absolute text-[#287AFF] flex items-center top-2 left-4 transition-opacity duration-200"
         />
       )}
 

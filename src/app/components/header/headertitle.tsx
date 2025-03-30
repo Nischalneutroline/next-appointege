@@ -19,7 +19,7 @@ const HeaderTitle: React.FC<HeaderTitleProps> = ({
         {pageTitle}
       </span>
       <div onClick={() => onToggleMenu()}>
-        <MenuIcon className="text-white" />
+        <MenuIcon sx={{ fontSize: "28px" }} className="text-white" />
       </div>
     </div>
   );

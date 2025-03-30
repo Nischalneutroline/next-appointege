@@ -43,14 +43,14 @@ const CountryFlag: React.FC<CountryFlagProps> = ({
           }}
         />
       </div>
-      <span className="flex items-center gap-1">
+      <span className="flex items-center gap-2">
         <span className="text-white font-semibold text-[16px]">
           Eng ({`${countryCode.toUpperCase()}`})
         </span>
-            <KeyboardArrowDownRoundedIcon
-            className="text-[#A098AE]"
-            sx={{ fontSize: "30px", padding: "0px" }}
-            />
+        <KeyboardArrowDownRoundedIcon
+          className="text-[#A098AE]"
+          sx={{ fontSize: "30px", padding: "0px" }}
+        />
       </span>
     </div>
   );
