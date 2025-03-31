@@ -13,13 +13,13 @@ const UserProfile = (props: UserProps) => {
   return (
     <div className="flex items-center gap-4">
       <Image
-        className="rounded-2xl"
+        className="rounded-2xl w-13 md:w-14 lg:w-16 xl:w-16"
         src="https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
         alt="Musfiq"
         width={60}
         height={60}
       />
-      <div className="flex gap-2 items-center">
+      <div className=" gap-2 items-center hidden md:flex">
         <div className="flex flex-col text-white justify-center">
           <div className="text-[16px] font-medium text-center leading-[24px]">
             {updatedUserName}
@@ -29,8 +29,15 @@ const UserProfile = (props: UserProps) => {
           </div>
         </div>
         <KeyboardArrowDownRoundedIcon
-          className="text-[#A098AE]"
-          sx={{ fontSize: "30px", padding: "0px" }}
+          className="text-white"
+          sx={{
+            fontSize: {
+              sm: "23px",
+              lg: "25px",
+              xl: "30px",
+            },
+            padding: "0px",
+          }}
         />
       </div>
     </div>

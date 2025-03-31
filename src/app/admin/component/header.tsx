@@ -14,8 +14,8 @@ interface HeaderProps {
 const Header = (props: HeaderProps) => {
   const { icon, pageTitle, onToggleMenu } = props;
   return (
-    <div className="relative min-h-[376px] bg-[#287AFF] rounded-b-[12px] w-full">
-      <div className="flex flex-col absolute top-4 right-0  min-w-[calc(100vw-285px)] pl-4 pr-12">
+    <div className="relative min-h-[376px] bg-[#287AFF] rounded-b-[12px] ">
+      <div className="flex flex-col absolute top-2 md:top-3 lg:top-4 w-full px-4 md:px-6 lg:right-0  lg:min-w-[calc(100vw-285px)] xl:pl-4 xl:pr-12">
         <div className="flex h-[60px] w-full items-center justify-between">
           <HeaderTitle
             icon={
@@ -31,10 +31,16 @@ const Header = (props: HeaderProps) => {
             <HeaderSearch />
             <CountryFlag countryCode="US" />
             <div className="flex gap-4 items-center">
-              <div className="relative flex items-center justify-center h-[45px] w-[45px] bg-white rounded-[20%]">
-                <div className="absolute bg-red-400 h-2 w-2 top-2 right-2 rounded-full" />
+              <div className="relative flex items-center justify-center h-[30px] w-[30px] lg:h-[35px] lg:w-[35px] 2xl:h-[45px] 2xl:w-[45px] bg-white rounded-[20%]">
+                <div className="absolute bg-red-400 lg:h-2 lg:w-2 h-[6px] w-[6px] top-1 right-1 2xl:top-2 2xl:right-2 rounded-full" />
                 <NotificationsNoneOutlinedIcon
-                  sx={{ fontSize: "30px" }}
+                  sx={{
+                    fontSize: {
+                      sm: "23px",
+                      lg: "25px",
+                      xl: "30px",
+                    },
+                  }}
                   className="text-[#FFA412]"
                 />
               </div>

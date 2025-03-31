@@ -11,16 +11,17 @@ export default function AdminLayout({
 }>) {
   const [openSidebar, setOpenSidebar] = useState(true);
   const onToggleMenu = () => {
+    console.log("seen toggle menu");
     setOpenSidebar(true);
   };
   return (
-    <div className="min-h-screen min-w-screen relative">
+    <div className="h-screen w-screen relative">
       <Header
         icon={<HomeIcon className="text-white" />}
         pageTitle="Dashboard"
         onToggleMenu={onToggleMenu}
       />
-      {openSidebar ? <Sidebar /> : <></>}
+      {/* {openSidebar ? <Sidebar /> : <></>} */}
       {children}
     </div>
   );

@@ -24,7 +24,7 @@ const CountryFlag: React.FC<CountryFlagProps> = ({
   }
 
   return (
-    <div className="flex justify-between gap-4 items-center">
+    <div className=" justify-between gap-4 items-center hidden lg:flex">
       <div
         style={{
           display: "inline-block",
@@ -48,8 +48,15 @@ const CountryFlag: React.FC<CountryFlagProps> = ({
           Eng ({`${countryCode.toUpperCase()}`})
         </span>
         <KeyboardArrowDownRoundedIcon
-          className="text-[#A098AE]"
-          sx={{ fontSize: "30px", padding: "0px" }}
+          className="text-white"
+          sx={{
+            fontSize: {
+              sm: "23px",
+              lg: "25px",
+              xl: "30px",
+            },
+            padding: "0px",
+          }}
         />
       </span>
     </div>
