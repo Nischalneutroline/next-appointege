@@ -1,7 +1,8 @@
-import { z } from "zod";
-import { AppointmentStatus } from "@/features/appointment/types/types"; // Import AppointmentStatus enum
+import { z } from "zod"
+import { AppointmentStatus } from "@/features/appointment/types/types" // Import AppointmentStatus enum
 
 export const appointmentSchema = z.object({
+  id: z.string().optional(),
   customerName: z.string().min(3, "Full name must be at least 3 characters"),
   email: z.string().email("Invalid email format"),
   phone: z.string().min(10, "Invalid phone number"),
@@ -17,4 +18,4 @@ export const appointmentSchema = z.object({
   userId: z.string().optional(),
   bookedById: z.string().optional(),
   resourceId: z.string().optional(),
-});
+})

@@ -1,8 +1,9 @@
 // src/features/service/schemas/schema.ts
-import { z } from "zod";
-import { Status, WeekDays } from "../types/types";
+import { z } from "zod"
+import { Status, WeekDays } from "../types/types"
 
 export const serviceSchema = z.object({
+  id: z.string().optional(),
   title: z.string().min(3, "Title must be at least 3 characters long"),
   description: z
     .string()
@@ -38,4 +39,4 @@ export const serviceSchema = z.object({
       })
     )
     .optional(),
-});
+})

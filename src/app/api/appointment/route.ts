@@ -5,6 +5,8 @@ import {
   AppointmentStatus,
 } from "@/features/appointment/types/types"
 import { ZodError } from "zod"
+import { prisma } from "@/lib/prisma"
+import { getAppointmentById } from "@/db/appointment"
 
 // Dummy Data Example
 
@@ -30,14 +32,39 @@ const appointments: Appointment[] = [
 //create new appointment
 export async function POST(req: NextRequest) {
   try {
+    // Parse the request body
     const body = await req.json()
+
+    // Validate the request body
     const parsedData = appointmentSchema.parse(body)
-    const newAppointment: Appointment = {
-      id: String(Date.now()), // Using timestamp as a unique ID
-      ...parsedData, // Spread the parsed data
+
+    // Create a new appointment in prisma
+    const newAppointment = await prisma.appointment.create({
+      data: {
+        customerName: parsedData.customerName,
+        email: parsedData.email,
+        phone: parsedData.phone,
+        status: parsedData.status,
+        userId: parsedData.userId,
+        bookedById: parsedData.bookedById,
+        serviceId: parsedData.serviceId,
+        selectedDate: parsedData.selectedDate,
+        selectedTime: parsedData.selectedTime,
+        message: parsedData.message,
+        isForSelf: parsedData.isForSelf,
+        createdById: parsedData.createdById,
+        resourceId: parsedData.resourceId,
+      },
+    })
+
+    if (!newAppointment) {
+      return NextResponse.json(
+        { error: "Failed to create appointment" },
+        { status: 500 }
+      )
     }
 
-    appointments.push(newAppointment)
+    // Return a success response
     return NextResponse.json(
       {
         message: "Appointment booked successfully",
@@ -46,14 +73,16 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     )
   } catch (error) {
+    // Handle validation errors
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation failed", details: error.errors[0].message },
         { status: 400 }
       )
     }
+    // Handle other errors
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: error },
       { status: 500 }
     )
   }
@@ -62,16 +91,21 @@ export async function POST(req: NextRequest) {
 //read all appointment
 export async function GET() {
   try {
+    const appointments = await prisma.appointment.findMany()
     if (appointments.length === 0) {
       return NextResponse.json(
         { error: "No appointments found" },
         { status: 404 }
       )
     }
+
     return NextResponse.json(appointments, { status: 200 })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch appointments" },
+      {
+        error: "Failed to fetch appointments",
+        details: (error as Error).message,
+      },
       { status: 500 }
     )
   }
@@ -84,18 +118,49 @@ export async function PUT(req: NextRequest) {
     const parsedData = appointmentSchema.parse(body)
 
     const { id } = body
-    const appIndex = appointments.findIndex((app) => app.id === id) //replace with prisma id logic
-    console.log("a", appIndex)
 
-    if (appIndex === -1) {
+    if (!id) {
+      return NextResponse.json(
+        { error: "Appointment Id required!" },
+        { status: 400 }
+      )
+    }
+    // Find the service by ID
+    const existingAppointment = await getAppointmentById(id)
+
+    if (!existingAppointment) {
       return NextResponse.json(
         { error: "Appointment not found" },
         { status: 404 }
       )
     }
 
-    const updatedService = { ...appointments[appIndex], ...parsedData }
-    appointments[appIndex] = updatedService
+    // update appointment in prisma database
+    const updatedService = await prisma.appointment.update({
+      where: { id },
+      data: {
+        customerName: parsedData.customerName,
+        email: parsedData.email,
+        phone: parsedData.phone,
+        status: parsedData.status,
+        userId: parsedData.userId,
+        bookedById: parsedData.bookedById,
+        serviceId: parsedData.serviceId,
+        selectedDate: parsedData.selectedDate,
+        selectedTime: parsedData.selectedTime,
+        message: parsedData.message,
+        isForSelf: parsedData.isForSelf,
+        createdById: parsedData.createdById,
+        resourceId: parsedData.resourceId,
+      },
+    })
+
+    if (!updatedService) {
+      return NextResponse.json(
+        { error: "Failed to update appointment" },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json(
       { message: "Appointment updated successfully", service: updatedService },
@@ -109,7 +174,7 @@ export async function PUT(req: NextRequest) {
       )
     }
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: (error as Error).message },
       { status: 500 }
     )
   }
@@ -137,7 +202,10 @@ export async function DELETE(req: NextRequest) {
     )
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to delete appointment" },
+      {
+        error: "Failed to delete appointment",
+        details: (error as Error).message,
+      },
       { status: 500 }
     )
   }

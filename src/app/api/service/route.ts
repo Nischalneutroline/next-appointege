@@ -1,145 +1,170 @@
-import { NextRequest, NextResponse } from "next/server";
-import { serviceSchema } from "@/features/service/schemas/schema";
-import { Service, Status, WeekDays } from "@/features/service/types/types";
-import { ZodError } from "zod";
+import { NextRequest, NextResponse } from "next/server"
+import { serviceSchema } from "@/features/service/schemas/schema"
+import { Service, Status, WeekDays } from "@/features/service/types/types"
+import { ZodError } from "zod"
+import { prisma } from "@/lib/prisma"
+import { getServiceById } from "@/db/service"
 
-let services: Service[] = [
-  {
-    id: "1",
-    title: "Premium Car Wash",
-    description:
-      "A thorough interior and exterior cleaning service for your vehicle.",
-    estimatedDuration: 90,
-    status: Status.ACTIVE,
-    serviceAvailability: [
-      {
-        weekDay: WeekDays.MONDAY,
-        timeSlots: [
-          {
-            startTime: "2025-04-01T08:00:00Z",
-            endTime: "2025-04-01T10:00:00Z",
-          },
-          {
-            startTime: "2025-04-01T14:00:00Z",
-            endTime: "2025-04-01T16:00:00Z",
-          },
-        ],
-      },
-      {
-        weekDay: WeekDays.FRIDAY,
-        timeSlots: [
-          {
-            startTime: "2025-04-05T10:00:00Z",
-            endTime: "2025-04-05T12:00:00Z",
-          },
-        ],
-      },
-    ],
-  },
-];
-
-//create service
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const parsedData = serviceSchema.parse(body);
+    const body = (await req.json()) as Service
 
-    // Generate a unique id (using timestamp here, for now)
-    const newService: Service = {
-      ...parsedData,
-      id: String(Date.now()), // Add a unique ID
-    };
+    const parsedData = serviceSchema.parse(body)
 
-    services.push(newService);
+    const newService = await prisma.service.create({
+      data: {
+        title: parsedData.title,
+        description: parsedData.description,
+        estimatedDuration: parsedData.estimatedDuration,
+        status: parsedData.status,
+        serviceAvailability: {
+          create: parsedData.serviceAvailability?.map((availability) => ({
+            weekDay: availability.weekDay,
+            timeSlots: {
+              create: availability.timeSlots?.map((timeSlot) => ({
+                startTime: timeSlot.startTime,
+                endTime: timeSlot.endTime,
+              })),
+            },
+          })),
+        },
+      },
+    })
 
     return NextResponse.json(
-      { message: "Service created successfully", service: newService },
+      { message: "New Service created successfully", service: newService },
       { status: 201 }
-    );
+    )
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation failed", details: error.errors[0].message },
         { status: 400 }
-      );
+      )
     }
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", message: error },
       { status: 500 }
-    );
+    )
   }
 }
 
 //fetch all service
 export async function GET() {
   try {
+    // get all services
+    const services = await prisma.service.findMany()
+
     if (services.length === 0) {
-      return NextResponse.json({ error: "No services found" }, { status: 404 });
+      return NextResponse.json({ error: "No services found" }, { status: 404 })
     }
-    return NextResponse.json(services, { status: 200 });
+    return NextResponse.json(services, { status: 200 })
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch services" },
       { status: 500 }
-    );
+    )
   }
 }
 
 //edit or  update service
 export async function PUT(req: NextRequest) {
   try {
-    const body = await req.json();
-    const parsedData = serviceSchema.parse(body);
+    const body = await req.json()
 
-    const { id } = body;
-    const serviceIndex = services.findIndex((service) => service.id === id);
+    const { id } = body
 
-    if (serviceIndex === -1) {
-      return NextResponse.json({ error: "Service not found" }, { status: 404 });
+    if (!id) {
+      return NextResponse.json(
+        { error: "Service Id required!" },
+        { status: 400 }
+      )
     }
 
-    const updatedService = { ...services[serviceIndex], ...parsedData };
-    services[serviceIndex] = updatedService;
+    const parsedData = serviceSchema.parse(body)
+
+    const existingService = await getServiceById(id)
+
+    if (!existingService) {
+      return NextResponse.json({ error: "Service not found" }, { status: 404 })
+    }
+
+    // update service
+    const updatedService = await prisma.service.update({
+      where: { id },
+      data: {
+        title: parsedData.title,
+        description: parsedData.description,
+        estimatedDuration: parsedData.estimatedDuration,
+        status: parsedData.status,
+        serviceAvailability: {
+          create: parsedData.serviceAvailability?.map((availability) => ({
+            weekDay: availability.weekDay,
+            timeSlots: {
+              create: availability.timeSlots?.map((timeSlot) => ({
+                startTime: timeSlot.startTime,
+                endTime: timeSlot.endTime,
+              })),
+            },
+          })),
+        },
+      },
+    })
 
     return NextResponse.json(
       { message: "Service updated successfully", service: updatedService },
       { status: 200 }
-    );
+    )
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation failed", details: error.errors[0].message },
         { status: 400 }
-      );
+      )
     }
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", message: error },
       { status: 500 }
-    );
+    )
   }
 }
 
 //delete service
 export async function DELETE(req: NextRequest) {
   try {
-    const { id } = await req.json();
+    const { id } = await req.json()
 
-    const serviceIndex = services.findIndex((service) => service.id === id); //replace with prisma id logic
-
-    if (serviceIndex === -1) {
-      return NextResponse.json({ error: "Service not found" }, { status: 404 });
+    if (!id) {
+      return NextResponse.json(
+        { error: "Service Id required!" },
+        { status: 400 }
+      )
     }
 
-    services.splice(serviceIndex, 1);
+    const existingService = await getServiceById(id)
 
+    if (!existingService) {
+      return NextResponse.json({ error: "Service not found" }, { status: 404 })
+    }
+
+    const deletedService = await prisma.service.delete({
+      where: { id },
+    })
+
+    if (!deletedService) {
+      return NextResponse.json(
+        { error: "Service could not be deleted" },
+        { status: 404 }
+      )
+    }
     return NextResponse.json(
       { message: "Service deleted successfully" },
       { status: 200 }
-    );
+    )
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to delete service" },
+      { error: "Failed to delete service", message: error },
       { status: 500 }
-    );
+    )
   }
 }
