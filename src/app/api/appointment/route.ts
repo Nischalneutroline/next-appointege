@@ -1,11 +1,10 @@
-
-import { NextRequest, NextResponse } from "next/server";
-import { appointmentSchema } from "@/features/appointment/schemas/schema";
+import { NextRequest, NextResponse } from "next/server"
+import { appointmentSchema } from "@/features/appointment/schemas/schema"
 import {
   Appointment,
   AppointmentStatus,
-} from "@/features/appointment/types/types";
-import { ZodError } from "zod";
+} from "@/features/appointment/types/types"
+import { ZodError } from "zod"
 
 // Dummy Data Example
 
@@ -26,37 +25,37 @@ const appointments: Appointment[] = [
     createdById: "user123", // Required (ID of the user who created the appointment)
     resourceId: "res987", // Optional (if relevant)
   },
-];
+]
 
 //create new appointment
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const parsedData = appointmentSchema.parse(body);
+    const body = await req.json()
+    const parsedData = appointmentSchema.parse(body)
     const newAppointment: Appointment = {
       id: String(Date.now()), // Using timestamp as a unique ID
       ...parsedData, // Spread the parsed data
-    };
+    }
 
-    appointments.push(newAppointment);
+    appointments.push(newAppointment)
     return NextResponse.json(
       {
         message: "Appointment booked successfully",
         appointment: newAppointment,
       },
       { status: 201 }
-    );
+    )
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation failed", details: error.errors[0].message },
         { status: 400 }
-      );
+      )
     }
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
-    );
+    )
   }
 }
 
@@ -67,80 +66,79 @@ export async function GET() {
       return NextResponse.json(
         { error: "No appointments found" },
         { status: 404 }
-      );
+      )
     }
-    return NextResponse.json(appointments, { status: 200 });
+    return NextResponse.json(appointments, { status: 200 })
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch appointments" },
       { status: 500 }
-    );
+    )
   }
 }
 
 //edit or  update appointment
 export async function PUT(req: NextRequest) {
   try {
-    const body = await req.json();
-    const parsedData = appointmentSchema.parse(body);
+    const body = await req.json()
+    const parsedData = appointmentSchema.parse(body)
 
-    const { id } = body;
-    const appIndex = appointments.findIndex((app) => app.id === id); //replace with prisma id logic
-    console.log("a", appIndex);
+    const { id } = body
+    const appIndex = appointments.findIndex((app) => app.id === id) //replace with prisma id logic
+    console.log("a", appIndex)
 
     if (appIndex === -1) {
       return NextResponse.json(
         { error: "Appointment not found" },
         { status: 404 }
-      );
+      )
     }
 
-    const updatedService = { ...appointments[appIndex], ...parsedData };
-    appointments[appIndex] = updatedService;
+    const updatedService = { ...appointments[appIndex], ...parsedData }
+    appointments[appIndex] = updatedService
 
     return NextResponse.json(
       { message: "Appointment updated successfully", service: updatedService },
       { status: 200 }
-    );
+    )
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json(
         { error: "Validation failed", details: error.errors[0].message },
         { status: 400 }
-      );
+      )
     }
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
-    );
+    )
   }
 }
 
 //delete appointment
 export async function DELETE(req: NextRequest) {
   try {
-    const { id } = await req.json();
+    const { id } = await req.json()
 
-    const appIndex = appointments.findIndex((app) => app.id === id); //replace with prisma id logic
+    const appIndex = appointments.findIndex((app) => app.id === id) //replace with prisma id logic
 
     if (appIndex === -1) {
       return NextResponse.json(
         { error: "Appointment not found" },
         { status: 404 }
-      );
+      )
     }
 
-    appointments.splice(appIndex, 1);
+    appointments.splice(appIndex, 1)
 
     return NextResponse.json(
       { message: "Appointment deleted successfully" },
       { status: 200 }
-    );
+    )
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to delete appointment" },
       { status: 500 }
-    );
+    )
   }
 }
->>>>>>> origin/main
