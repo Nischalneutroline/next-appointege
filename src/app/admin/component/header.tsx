@@ -1,10 +1,10 @@
+import CountryFlag from "@/app/components/header/countryflags";
+import HeaderSearch from "@/app/components/header/headersearch";
+import HeaderTitle from "@/app/components/header/headertitle";
+import UserProfile from "@/app/components/header/userprofile";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import UserProfile from "@/app/components/header/UserProfile";
 
-import HeaderSearch from "../../components/header/HeaderSearch";
-import HeaderTitle from "@/app/components/header/HeaderTitle";
-import CountryFlag from "@/app/components/header/CountryFlags";
 interface HeaderProps {
   icon: React.ReactNode;
   pageTitle: string;
@@ -15,7 +15,7 @@ const Header = (props: HeaderProps) => {
   const { icon, pageTitle, onToggleMenu } = props;
   return (
     <div className="relative min-h-[376px] bg-[#287AFF] rounded-b-[12px] ">
-      <div className="flex flex-col absolute top-2 md:top-3 lg:top-4 w-full px-4 md:px-6 lg:right-0  lg:min-w-[calc(100vw-285px)] xl:pl-4 xl:pr-12">
+      <div className="flex flex-col absolute top-2 md:top-3 lg:top-4 w-full px-4 md:px-6 lg:right-0  lg:max-w-[calc(100vw-325px)] xl:pl-2 xl:pr-12">
         <div className="flex h-[60px] w-full items-center justify-between">
           <HeaderTitle
             icon={
