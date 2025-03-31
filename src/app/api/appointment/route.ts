@@ -85,7 +85,7 @@ export async function PUT(req: NextRequest) {
 
     const { id } = body
     const appIndex = appointments.findIndex((app) => app.id === id) //replace with prisma id logic
-    console.log("a", appIndex)
+ 
 
     if (appIndex === -1) {
       return NextResponse.json(
