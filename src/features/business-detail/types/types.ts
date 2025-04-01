@@ -1,4 +1,5 @@
-// -- Business Detaila and Support
+import { SupportBusinessDetail } from "@/features/support-detail/types/types";
+
 // Enum for Business Status
 export enum BusinessStatus {
   ACTIVE = "ACTIVE",
@@ -61,16 +62,6 @@ export interface BusinessAddress {
   googleMap: string; // Google Map URL for the address
 }
 
-// Interface for SupportBusinessDetail (Support team details)
-export interface SupportBusinessDetail {
-  supportBusinessName: string;
-  supportEmail: string;
-  supportPhone: string;
-  supportAddress: string;
-  supportGoogleMap?: string;
-  supportAvailability: BusinessAvailability[]; // Separate availability for support
-  supportHoliday: Holiday[]; // Separate holidays for support
-}
 
 export interface BusinessDetail {
   id: string;
@@ -84,6 +75,6 @@ export interface BusinessDetail {
   address: BusinessAddress[]; // Addresses for the business branches
   businessAvailability: BusinessAvailability[]; // General availability for the business
   holiday: Holiday[]; // General holidays for the business
-  /* supportBusinessDetail?: SupportBusinessDetail; */ // Optional support business details
+  supportBusinessDetail?: SupportBusinessDetail; // Optional support business details
 }
 

@@ -73,40 +73,12 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const parsedData = businessDetailSchema.parse(body);
 
-    // Helper function to generate unique IDs
-    const generateId = () =>
-      String(Date.now()) + Math.random().toString(36).slice(2, 11);
+    // Use prisma logic
+   
 
-    // Generate a unique ID for the business (using timestamp here)
-    const newBusiness: BusinessDetail = {
-      ...parsedData,
-      id: generateId(),
-
-      address: parsedData.address.map((addr) => ({
-        ...addr,
-        id: generateId(),
-      })),
-
-      businessAvailability: parsedData.businessAvailability.map(
-        (availability) => ({
-          ...availability,
-          id: generateId(),
-          timeSlots: availability.timeSlots.map((slot) => ({
-            ...slot,
-            id: generateId(),
-          })),
-        })
-      ),
-
-      holiday: parsedData.holiday.map((holiday) => ({
-        ...holiday,
-        id: generateId(),
-      })),
-    };
-    businessDetails.push(newBusiness);
 
     return NextResponse.json(
-      { message: "Business created successfully", business: newBusiness },
+      { message: "Business created successfully" },
       { status: 201 }
     );
   } catch (error) {
@@ -147,6 +119,7 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
     const parsedData = businessDetailSchema.parse(body);
 
+    //replace with prisma logic
     const { id } = body;
     const businessIndex = businessDetails.findIndex(
       (business) => business.id === id
@@ -159,32 +132,12 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const updatedBusiness = {
-        ...businessDetails[businessIndex],
-        ...parsedData,
-        address: parsedData.address.map((addr) => ({
-          ...addr,
-          id: generateId(),  // Add a unique ID to each address
-        })),
-        businessAvailability: parsedData.businessAvailability.map((availability) => ({
-          ...availability,
-          id: generateId(),  // Add a unique ID to each availability
-          timeSlots: availability.timeSlots.map((slot) => ({
-            ...slot,
-            id: generateId(),  // Add a unique ID to each timeSlot
-          }))
-        })),
-        holiday: parsedData.holiday.map((holiday) => ({
-          ...holiday,
-          id: generateId(),  // Add a unique ID to each holiday
-        })),
-      };
+    
+    //use prisma logic to update in db
       
-      
-    businessDetails[businessIndex] = updatedBusiness;
 
     return NextResponse.json(
-      { message: "Business updated successfully", business: updatedBusiness },
+      { message: "Business updated successfully",  },
       { status: 200 }
     );
   } catch (error) {
@@ -206,6 +159,7 @@ export async function DELETE(req: NextRequest) {
   try {
     const { id } = await req.json();
 
+    //replace with prisma logic
     const businessIndex = businessDetails.findIndex(
       (business) => business.id === id
     );
