@@ -110,7 +110,7 @@ const AppointmentForm = () => {
             placeholder="Any special requests?"
           />
 
-          <div className="flex justify-between mt-6">
+          <div className="flex flex-col gap-3 md:flex-row justify-between mt-6">
             <Button
               type="button"
               variant="outline"
