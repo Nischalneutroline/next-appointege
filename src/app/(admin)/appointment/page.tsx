@@ -1,5 +1,4 @@
 import Heading from "@/components/admin/heading"
-import React from "react"
 
 import { CalendarDays } from "lucide-react"
 import AppointmentForm from "@/features/appointment/components/admin/form/appointment-form"
