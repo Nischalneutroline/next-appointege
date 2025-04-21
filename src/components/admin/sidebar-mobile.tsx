@@ -13,12 +13,14 @@ import {
 import { usePathname } from "next/navigation"
 import { useNavStore } from "@/state/store"
 import { useRouter } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 const SidebarMobile = () => {
   const { isOpen, onOpen, onClose } = useNavStore()
 
   // get the pathname to set activate state
   const pathname = usePathname()
+
   // router for client side
   const router = useRouter()
 
@@ -76,7 +78,10 @@ const SidebarMobile = () => {
             {navLinks.slice(0, 4).map((link, index) => (
               <div
                 key={index}
-                className="group flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-200"
+                className={cn(
+                  "group flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-700 cursor-pointer transition-all duration-200",
+                  pathname === link.path && "bg-gray-50 text-blue-700"
+                )}
                 onClick={() => handleNavClick(link.path)}
               >
                 <span className="size-6">{link.icon}</span>
@@ -92,7 +97,10 @@ const SidebarMobile = () => {
             {navLinks.slice(4).map((link, index) => (
               <div
                 key={index}
-                className="group flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all duration-200"
+                className={cn(
+                  "group flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-700 cursor-pointer transition-all duration-200",
+                  pathname === link.path && "bg-gray-50 text-blue-700"
+                )}
                 onClick={() => handleNavClick(link.path)}
               >
                 <span className="size-6">{link.icon}</span>

@@ -10,10 +10,13 @@ import {
   Headset,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 const SidebarDesktop = () => {
   const router = useRouter()
+
+  // check the pathname and set is active in nav link item for highlighting
+  const pathname = usePathname()
 
   // handle nav click
   const handleNavClick = (link: string) => {
@@ -77,7 +80,10 @@ const SidebarDesktop = () => {
             {navLinks.slice(0, 4).map((link, index) => (
               <div
                 key={index}
-                className="group flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-black cursor-pointer transition-all duration-200"
+                className={cn(
+                  "group flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-700 cursor-pointer transition-all duration-200",
+                  pathname === link.path && "bg-gray-50 text-blue-700"
+                )}
                 onClick={() => handleNavClick(link.path)}
               >
                 <span className="">{link.icon}</span>
@@ -104,7 +110,10 @@ const SidebarDesktop = () => {
             {navLinks.slice(4).map((link, index) => (
               <div
                 key={index}
-                className="group flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-black cursor-pointer transition-all duration-200"
+                className={cn(
+                  "group flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-700 cursor-pointer transition-all duration-200",
+                  pathname === link.path && "bg-gray-50 text-blue-700"
+                )}
                 onClick={() => handleNavClick(link.path)}
               >
                 <span>{link.icon}</span>
@@ -144,7 +153,7 @@ const SidebarDesktop = () => {
             </div>
           </div>
           {!isSidebarCollapsed && (
-            <Settings className="w-5 h-5 text-gray-700 cursor-pointer hover:text-black" />
+            <Settings className="w-5 h-5 text-gray-700 cursor-pointer hover:text-blue-700" />
           )}
         </div>
       </aside>
