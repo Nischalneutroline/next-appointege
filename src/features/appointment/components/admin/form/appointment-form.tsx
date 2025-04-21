@@ -48,11 +48,11 @@ const AppointmentForm = () => {
 
   const onSubmit = (data: any) => {
     console.log("Appointment Form Submitted:", data)
-    // Here you can handle the appointment submission, for example, API calls
+    // Handle appointment submission (e.g., API calls)
   }
 
   const handleBack = () => {
-    router.push("/admin/appointments") // Adjust to your back navigation path
+    router.push("/admin/appointments")
   }
 
   return (
