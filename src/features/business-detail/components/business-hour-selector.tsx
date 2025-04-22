@@ -12,12 +12,8 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { CalendarDays, Plus, Trash2 } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-// Days to show as toggleable tabs
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-
-// Available time options for slots
 const timeOptions = [
   "08:00 AM",
   "09:00 AM",
@@ -34,6 +30,8 @@ const timeOptions = [
   "08:00 PM",
 ]
 
+const defaultBreak = ["12:00 PM", "01:00 PM"]
+
 const BusinessHourSelector = ({ name }: { name: string }) => {
   const { watch, setValue } = useFormContext()
 
@@ -43,34 +41,42 @@ const BusinessHourSelector = ({ name }: { name: string }) => {
 
   const [activeDay, setActiveDay] = useState(businessDays[0] || "")
 
-  // Helper to exclude overlapping times with break hours
-  const getFilteredTimeOptions = (
-    day: string,
-    excludeRanges: [string, string][]
-  ) => {
-    const result: string[] = []
+  // Initialize default break for each day
+  useEffect(() => {
+    const updated = { ...businessHours }
+    let hasChanges = false
 
-    timeOptions.forEach((time) => {
-      const isOverlapping = excludeRanges.some(([start, end]) => {
-        return time >= start && time < end
-      })
-      if (!isOverlapping) result.push(time)
+    businessDays.forEach((day: string) => {
+      if (!updated[day]) {
+        updated[day] = { work: [], break: [defaultBreak] }
+        hasChanges = true
+      } else if (!updated[day].break || updated[day].break.length === 0) {
+        updated[day].break = [defaultBreak]
+        hasChanges = true
+      }
     })
 
-    return result
+    if (hasChanges) {
+      setValue(name, updated, { shouldValidate: true })
+    }
+  }, [businessDays, businessHours, setValue, name])
+
+  // Filter time options to exclude break times
+  const getWorkTimeOptions = (breakSlots: [string, string][]) => {
+    return timeOptions.filter((time) => {
+      return !breakSlots.some(([start, end]) => time >= start && time <= end)
+    })
   }
 
-  // Filter time based on previous end and break overlaps
+  // Get available times for a slot, respecting previous slot's end time
   const getAvailableTimes = (
     afterTime: string | undefined,
-    excludeRanges: [string, string][],
-    isEnd = false
+    options: string[],
+    isEnd: boolean = false
   ) => {
-    const base = getFilteredTimeOptions(activeDay, excludeRanges)
-    if (!afterTime) return base
-
-    const index = base.indexOf(afterTime)
-    return isEnd ? base.slice(index + 1) : base.slice(index)
+    if (!afterTime || !options.includes(afterTime)) return options
+    const index = options.indexOf(afterTime)
+    return isEnd ? options.slice(index + 1) : options.slice(index)
   }
 
   const handleChange = (
@@ -78,46 +84,46 @@ const BusinessHourSelector = ({ name }: { name: string }) => {
     index: number,
     type: "work" | "break",
     position: "start" | "end",
-    newVal: string
+    value: string
   ) => {
     const updated = { ...businessHours }
     const slots = [...(updated[day]?.[type] || [])]
     const current = slots[index] || ["", ""]
 
-    if (position === "start") current[0] = newVal
-    else current[1] = newVal
+    if (position === "start") current[0] = value
+    else current[1] = value
 
     slots[index] = current
-    updated[day] = {
-      ...updated[day],
-      [type]: slots,
-    }
-    setValue(name, updated)
+    updated[day] = { ...updated[day], [type]: slots }
+    setValue(name, updated, { shouldValidate: true })
   }
 
   const addSlot = (day: string, type: "work" | "break") => {
     const updated = { ...businessHours }
-    const slots = [...(updated[day]?.[type] || [])]
-    const prevEnd = slots[slots.length - 1]?.[1] || ""
-    slots.push([prevEnd, ""])
+    const prevSlots = updated[day]?.[type] || []
+    const prevEnd = prevSlots[prevSlots.length - 1]?.[1] || ""
     updated[day] = {
       ...updated[day],
-      [type]: slots,
+      [type]: [...prevSlots, [prevEnd, ""]],
     }
-    setValue(name, updated)
+    setValue(name, updated, { shouldValidate: true })
   }
 
   const removeSlot = (day: string, type: "work" | "break", index: number) => {
     const updated = { ...businessHours }
-    updated[day][type] = updated[day][type].filter(
-      (_: any, i: number) => i !== index
-    )
-    setValue(name, updated)
+    updated[day][type] = updated[day][type].filter((_, i) => i !== index)
+    setValue(name, updated, { shouldValidate: true })
   }
+
+  // Get break slots for the active day, default to defaultBreak
+  const breakSlots = businessHours[activeDay]?.["break"] || [defaultBreak]
+
+  // Get work time options, excluding all break times
+  const workTimeOptions = getWorkTimeOptions(breakSlots)
 
   return (
     <div className="space-y-6">
-      <Label>Business Hours / Day</Label>
+      <Label>Business Hours</Label>
 
       {/* Tabs */}
       <div className="flex items-center gap-2">
@@ -143,92 +149,106 @@ const BusinessHourSelector = ({ name }: { name: string }) => {
         </div>
       </div>
 
-      {/* Work + Break Slot Forms */}
-      {["work", "break"].map((type) => {
-        const isWork = type === "work"
-        const typeLabel = isWork ? "Work Hours" : "Break Hours"
-        const icon = isWork ? "🛠️" : "☕"
-        const slots = businessHours[activeDay]?.[type] || []
-        const breakRanges = businessHours[activeDay]?.["break"] || []
-        return (
-          <div key={type} className="space-y-2">
-            <Label>
-              {icon} {typeLabel}
-            </Label>
-            <div className="space-y-3">
-              {slots.map((slot: [string, string], idx: number) => {
-                const availableStarts = getAvailableTimes(
-                  idx > 0 ? slots[idx - 1]?.[1] : undefined,
-                  isWork ? breakRanges : []
-                )
-                const availableEnds = getAvailableTimes(
-                  slot[0],
-                  isWork ? breakRanges : [],
-                  true
-                )
-                return (
-                  <div key={idx} className="flex gap-4 items-center">
-                    <Select
-                      value={slot[0]}
-                      onValueChange={(val) =>
-                        handleChange(activeDay, idx, type as any, "start", val)
-                      }
-                    >
-                      <SelectTrigger className="w-40">
-                        <SelectValue placeholder="Start" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availableStarts.map((t) => (
-                          <SelectItem key={t} value={t}>
-                            {t}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+      {/* Work & Break side by side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
+        {["work", "break"].map((type) => {
+          const isWork = type === "work"
+          const label = isWork ? "Work Hours 🛠️" : "Break Hours ☕"
+          const slots =
+            businessHours[activeDay]?.[type] || (isWork ? [] : [defaultBreak])
 
-                    <Select
-                      value={slot[1]}
-                      onValueChange={(val) =>
-                        handleChange(activeDay, idx, type as any, "end", val)
-                      }
-                    >
-                      <SelectTrigger className="w-40">
-                        <SelectValue placeholder="End" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availableEnds.map((t) => (
-                          <SelectItem key={t} value={t}>
-                            {t}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+          return (
+            <div key={type} className="space-y-4">
+              <div className="flex flex-col lg:flex-row gap-2 items-start border p-4">
+                <Label className="pt-2">{label}</Label>
+                <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2">
+                    {slots.map((slot: [string, string], idx: number) => {
+                      const options = isWork ? workTimeOptions : timeOptions
+                      const availableStart = getAvailableTimes(
+                        idx > 0 ? slots[idx - 1][1] : undefined,
+                        options
+                      )
+                      const availableEnd = getAvailableTimes(
+                        slot[0],
+                        options,
+                        true
+                      )
 
-                    {idx > 0 && (
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => removeSlot(activeDay, type as any, idx)}
-                      >
-                        <Trash2 className="w-4 h-4 text-destructive" />
-                      </Button>
-                    )}
+                      return (
+                        <div
+                          key={idx}
+                          className="flex items-center gap-4 justify-center"
+                        >
+                          <Select
+                            value={slot[0]}
+                            onValueChange={(val) =>
+                              handleChange(activeDay, idx, type, "start", val)
+                            }
+                          >
+                            <SelectTrigger className="w-36">
+                              <SelectValue placeholder="Start" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {availableStart.map((t) => (
+                                <SelectItem key={t} value={t}>
+                                  {t}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+
+                          <div className="relative">
+                            <Select
+                              value={slot[1]}
+                              onValueChange={(val) =>
+                                handleChange(activeDay, idx, type, "end", val)
+                              }
+                            >
+                              <SelectTrigger className="w-36">
+                                <SelectValue placeholder="End" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {availableEnd.map((t) => (
+                                  <SelectItem key={t} value={t}>
+                                    {t}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+
+                            {(isWork || idx > 0) && (
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => removeSlot(activeDay, type, idx)}
+                                className="absolute -right-10 top-1"
+                              >
+                                <Trash2 className="w-4 h-4 text-destructive" />
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
-                )
-              })}
-              <Button
-                type="button"
-                onClick={() => addSlot(activeDay, type as any)}
-                variant="outline"
-                className="text-xs gap-1"
-              >
-                <Plus className="w-3 h-3" /> Add {typeLabel} Slot
-              </Button>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => addSlot(activeDay, type)}
+                    className="text-xs gap-1"
+                  >
+                    <Plus className="w-3 h-3" />
+                    Add Slot
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-        )
-      })}
+          )
+        })}
+      </div>
     </div>
   )
 }

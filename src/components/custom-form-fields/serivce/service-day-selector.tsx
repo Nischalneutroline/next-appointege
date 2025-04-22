@@ -73,7 +73,10 @@ const ServiceDaySelector = ({ name }: { name: string }) => {
       </div>
       <div className="flex gap-1 items-center">
         <span>
-          <CircleAlert className="size-4 opacity-50 text-white fill-blue-500" />
+          <CircleAlert
+            className="si
+          ze-4 opacity-50 text-white fill-blue-500"
+          />
         </span>
         <p className="text-xs text-muted-foreground">
           Default Service days are set based on working days. To modify, update

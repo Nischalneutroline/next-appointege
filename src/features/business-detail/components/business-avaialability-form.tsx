@@ -14,12 +14,16 @@ import {
 import { cn } from "@/lib/utils"
 import { CalendarDays, Clock, Plus, Trash2 } from "lucide-react"
 import BusinessHourSelector from "./business-hour-selector"
+import AvailabilityTabs from "@/components/custom-form-fields/availability-tabs"
+import BusinessDaysField from "@/components/custom-form-fields/business-settings/business-day-field"
+import HolidayField from "@/components/custom-form-fields/business-settings/business-holiday-field"
 
 // Default form values
 const defaultValues = {
   timeZone: "",
   businessDays: ["Mon", "Tue", "Wed", "Thu", "Fri"],
   holidays: ["Sat", "Sun"],
+  availabilityMode: "default",
   businessHours: {
     Mon: { work: [["09:00 AM", "05:00 PM"]], break: [] },
     Tue: { work: [["09:00 AM", "05:00 PM"]], break: [] },
@@ -31,7 +35,6 @@ const defaultValues = {
   },
 }
 
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 const timeOptions = [
   "08:00 AM",
   "09:00 AM",
@@ -57,6 +60,9 @@ export default function BusinessSettingsForm() {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Availability Mode */}
+        <AvailabilityTabs name="availabilityMode" />
+
         {/* Time Zone Field */}
         <TimeZoneField name="timeZone" />
 
@@ -112,80 +118,42 @@ const TimeZoneField = ({ name }: { name: string }) => {
   )
 }
 
-// Business Days Selector
-const BusinessDaysField = ({ name, holidayFieldName }: any) => {
-  const { watch, setValue } = useFormContext()
-  const selected = watch(name) || []
-  const holidays = watch(holidayFieldName) || []
+// // Business Days Selector
+// const BusinessDaysField = ({ name, holidayFieldName }: any) => {
+//   const { watch, setValue } = useFormContext()
+//   const selected = watch(name) || []
+//   const holidays = watch(holidayFieldName) || []
 
-  const toggle = (day: string) => {
-    const updated = selected.includes(day)
-      ? selected.filter((d: string) => d !== day)
-      : [...selected, day]
-    setValue(name, updated)
-  }
+//   const toggle = (day: string) => {
+//     const updated = selected.includes(day)
+//       ? selected.filter((d: string) => d !== day)
+//       : [...selected, day]
+//     setValue(name, updated)
+//   }
 
-  return (
-    <div className="space-y-1">
-      <Label>Business Days</Label>
-      <div className="flex gap-2 flex-wrap">
-        {days.map((day) => (
-          <Button
-            key={day}
-            type="button"
-            onClick={() => toggle(day)}
-            disabled={holidays.includes(day)}
-            variant={selected.includes(day) ? "default" : "outline"}
-            className={cn(
-              "min-w-[60px]",
-              selected.includes(day) && "bg-blue-500 text-white"
-            )}
-          >
-            {day}
-          </Button>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// Holiday Selector
-const HolidayField = ({ name, disableFieldName }: any) => {
-  const { watch, setValue } = useFormContext()
-  const selected = watch(name) || []
-  const businessDays = watch(disableFieldName) || []
-
-  const toggle = (day: string) => {
-    const updated = selected.includes(day)
-      ? selected.filter((d: string) => d !== day)
-      : [...selected, day]
-    setValue(name, updated)
-    // Remove from businessDays if added to holiday
-    setValue(
-      disableFieldName,
-      businessDays.filter((d: string) => !updated.includes(d))
-    )
-  }
-
-  return (
-    <div className="space-y-1">
-      <Label>Holiday</Label>
-      <div className="flex gap-2 flex-wrap">
-        {days.map((day) => (
-          <Button
-            key={day}
-            type="button"
-            onClick={() => toggle(day)}
-            variant={selected.includes(day) ? "destructive" : "outline"}
-            className="min-w-[60px]"
-          >
-            {day}
-          </Button>
-        ))}
-      </div>
-    </div>
-  )
-}
+//   return (
+//     <div className="space-y-1">
+//       <Label>Business Days</Label>
+//       <div className="flex gap-2 flex-wrap">
+//         {days.map((day) => (
+//           <Button
+//             key={day}
+//             type="button"
+//             onClick={() => toggle(day)}
+//             disabled={holidays.includes(day)}
+//             variant={selected.includes(day) ? "default" : "outline"}
+//             className={cn(
+//               "min-w-[60px]",
+//               selected.includes(day) && "bg-blue-500 text-white"
+//             )}
+//           >
+//             {day}
+//           </Button>
+//         ))}
+//       </div>
+//     </div>
+//   )
+// }
 
 // Business Hours Tab View
 // const BusinessHoursField = ({ name }: { name: string }) => {
