@@ -2,15 +2,15 @@
 "use client"
 
 import { useForm, FormProvider } from "react-hook-form"
-import InputField from "@/components/custom/input-field"
-import SelectField from "@/components/custom/select-field"
-import TextAreaField from "@/components/custom/textarea-field"
-import DatePickerField from "@/components/custom/date-field"
-import PhoneInputField from "@/components/custom/phone-field"
-import TimePickerField from "@/components/custom/time-field"
+import InputField from "@/components/custom-form-fields/input-field"
+import SelectField from "@/components/custom-form-fields/select-field"
+import TextAreaField from "@/components/custom-form-fields/textarea-field"
+import PhoneInputField from "@/components/custom-form-fields/phone-field"
+import TimePickerField from "@/components/custom-form-fields/time-field"
 import { Button } from "@/components/ui/button"
 import FormHeader from "@/components/admin/form-header"
 import { useRouter } from "next/navigation"
+import DatePickerField from "@/components/custom-form-fields/date-field"
 
 const serviceOptions = [
   { label: "Consultation", value: "consultation" },

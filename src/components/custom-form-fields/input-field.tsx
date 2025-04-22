@@ -17,6 +17,7 @@ interface InputFieldProps {
   placeholder?: string
   type?: string
   className?: string // Allow custom class styling
+  icon?: React.ReactNode
 }
 
 const InputField = ({
@@ -24,6 +25,7 @@ const InputField = ({
   label,
   placeholder,
   type = "text",
+  icon,
   className,
 }: InputFieldProps) => {
   const { control } = useFormContext()
@@ -34,7 +36,10 @@ const InputField = ({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <div className="flex gap-2">
+            <span>{icon}</span>
+            <FormLabel>{label}</FormLabel>
+          </div>
           <FormControl>
             <Input
               {...field}
