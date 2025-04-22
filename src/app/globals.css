@@ -132,6 +132,13 @@
   .gradient-text {
     @apply bg-gradient-to-b from-[#287AFF] to-[#184999] bg-clip-text text-transparent;
   }
+
+  /*************  ✨ Windsurf Command 🌟  *************/
+  .inset-button {
+    @apply shadow-[0px_2px_4px_0px_#001F5280_inset] bg-[#E98651];
+    /* @apply shadow-[0px_2px_4px_0px_#001F5280_inset] bg-amber-600; */
+  }
+  /*******  c5f8443d-a518-40c0-a4f8-58cf00707b25  *******/
 }
 /* .inset-button {
   box-shadow: "0px 2px 4px 0px #001F5280 inset";
