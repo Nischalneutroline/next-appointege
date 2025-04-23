@@ -9,8 +9,8 @@ const ServicePage = () => {
       <Breadcrumbs />
       <div>
         <Heading
-          title="Create New Service"
-          description="Manage and Customize your offered service"
+          title="Create New Customer"
+          description="Manage and View your customers"
           icon={<HandPlatter />}
         />
       </div>
