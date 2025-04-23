@@ -34,14 +34,14 @@ const availableTimeSlots = [
 const AppointmentForm = () => {
   const form = useForm({
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      service: "",
+      firstName: "Nischal",
+      lastName: "Puri",
+      email: "nissal@gmail.com",
+      phone: "+91 1234567890",
+      service: "Dentail",
       date: undefined,
       time: "",
-      message: "",
+      message: "noting to day",
     },
   })
 

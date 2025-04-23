@@ -45,7 +45,7 @@ const issueCategoryOptions = [
 ]
 
 const priorityLevelOptions = [
-  { value: "low", label: "Low" },
+  { value: "low", label: "🔴 Low" },
   { value: "medium", label: "Medium" },
   { value: "high", label: "High" },
 ]

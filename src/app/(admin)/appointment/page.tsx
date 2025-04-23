@@ -1,26 +1,13 @@
-import Heading from "@/components/admin/heading"
-import { CalendarDays } from "lucide-react"
-import AppointmentForm from "@/features/appointment/components/admin/form/appointment-form"
-import Breadcrumbs from "@/components/shared/bread-crumb"
-import { Card } from "@/components/ui/card"
-import PageHeader from "@/components/shared/page-header"
+import React from "react"
 
-const AppointmentFormPage = () => {
-  return (
-    <main className="h-full flex flex-col">
-      <PageHeader>
-        <Heading
-          title="Create New Appointment"
-          description="Schedule a new appointment"
-          icon={<CalendarDays />}
-        />
-      </PageHeader>
-      {/* Scrollable Form Container */}
-      <Card className=" overflow-y-auto p-6">
-        <AppointmentForm />
-      </Card>
-    </main>
-  )
+// TODO: List / Table of appointments
+const AppointmentPage = () => {
+  // tabs state
+
+  // tabs handlers based on the active tab
+
+  // base on the active tab render the corresponding content
+  return <div>AppointmentPage</div>
 }
 
-export default AppointmentFormPage
+export default AppointmentPage

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { userSchema } from "@/features/user/schemas/schema"
-import { User, Role } from "@/features/user/types/types"
+import { userSchema } from "@/features/customer/schemas/schema"
+import { User, Role } from "@/features/customer/types/types"
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { getUserByEmail, getUserById } from "@/db/user"

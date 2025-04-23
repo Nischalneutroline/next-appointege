@@ -46,7 +46,7 @@ const CustomerForm = () => {
     defaultValues: {
       fullName: "",
       email: "",
-      phone: "+95129871987391",
+      phone: "95129871987391",
       role: "",
       password: "",
     },

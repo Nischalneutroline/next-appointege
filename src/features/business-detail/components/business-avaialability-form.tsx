@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { cn } from "@/lib/utils"
 import {
   CalendarDays,
   Clock,
@@ -35,12 +34,15 @@ const defaultValues = {
     Mon: {
       work: [["08:00 AM", "10:00 AM"]],
       break: [
-        ["12:00 PM", "02:00 PM"],
+        ["12:00 PM", "01:00 PM"],
         ["02:00 PM", "03:00 PM"],
         ["03:00 PM", "04:00 PM"],
       ],
     },
-    Tue: { work: [["09:00 AM", "05:00 PM"]], break: [] },
+    Tue: {
+      work: [["09:00 AM", "05:00 PM"]],
+      break: [["02:00 PM", "04:00 PM"]],
+    },
     Wed: { work: [["09:00 AM", "05:00 PM"]], break: [] },
     Thu: { work: [["09:00 AM", "05:00 PM"]], break: [] },
     Fri: { work: [["09:00 AM", "05:00 PM"]], break: [] },
