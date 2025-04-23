@@ -10,8 +10,8 @@ const AppointmentFormPage = () => {
     <main className="h-full flex flex-col">
       <PageHeader>
         <Heading
-          title="Create New Appointment"
-          description="Schedule a new appointment"
+          title="Create New Customer"
+          description="Create and Mange your customers"
           icon={<CalendarDays />}
         />
       </PageHeader>
