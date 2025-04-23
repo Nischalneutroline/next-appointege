@@ -2,24 +2,25 @@ import Heading from "@/components/admin/heading"
 import { CalendarDays } from "lucide-react"
 import AppointmentForm from "@/features/appointment/components/admin/form/appointment-form"
 import Breadcrumbs from "@/components/shared/bread-crumb"
+import { Card } from "@/components/ui/card"
+import PageHeader from "@/components/shared/page-header"
 
-const AdminPage = () => {
+const AppointmentFormPage = () => {
   return (
     <main className="h-full flex flex-col">
-      <Breadcrumbs />
-      <div>
+      <PageHeader>
         <Heading
           title="Create New Appointment"
           description="Schedule a new appointment"
           icon={<CalendarDays />}
         />
-      </div>
+      </PageHeader>
       {/* Scrollable Form Container */}
-      <div className="flex-1 p-4 lg:p-6 bg-white rounded-lg shadow-xl overflow-y-auto">
+      <Card className=" overflow-y-auto p-6">
         <AppointmentForm />
-      </div>
+      </Card>
     </main>
   )
 }
 
-export default AdminPage
+export default AppointmentFormPage

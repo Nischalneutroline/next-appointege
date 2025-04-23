@@ -41,6 +41,7 @@ const SidebarMobile = () => {
   // handle click on nav link and route to that page
   const handleNavClick = (link: string) => {
     router.push(link)
+    onClose()
   }
 
   return (

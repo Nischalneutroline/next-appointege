@@ -50,7 +50,7 @@ const ServiceDaySelector = ({ name }: { name: string }) => {
               <Checkbox
                 checked={isChecked}
                 onCheckedChange={() => toggle(day)}
-                className="border-blue-500"
+                className="border-blue-500 hidden lg:block"
               />
 
               {/* Button styled based on selection */}

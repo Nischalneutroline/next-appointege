@@ -94,10 +94,10 @@ const TimeZoneField = ({ name }: { name: string }) => {
   const { watch, setValue } = useFormContext()
   const value = watch(name)
   return (
-    <div className="space-y-1">
+    <div className="space-y-1 ">
       <Label>Time Zone</Label>
       <Select value={value} onValueChange={(val) => setValue(name, val)}>
-        <SelectTrigger>
+        <SelectTrigger className="w-full">
           <SelectValue placeholder="Select Time Zone" />
         </SelectTrigger>
         <SelectContent>

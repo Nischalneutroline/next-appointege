@@ -36,7 +36,7 @@ const BusinessDaysField = ({ name, holidayFieldName }: any) => {
                 checked={isSelected}
                 disabled={isDisabled}
                 onCheckedChange={() => toggle(day)}
-                className="border-blue-500"
+                className="border-blue-500 hidden lg:block"
               />
 
               <Button

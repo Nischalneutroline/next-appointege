@@ -47,22 +47,22 @@ const defaultServiceHours = {
 
 export default function ServiceForm() {
   // for edit form
-  // const form = useForm({
-  //   defaultValues: fetchedService,
-  // })
-
   const form = useForm({
-    defaultValues: {
-      serviceName: "",
-      description: "",
-      image: null,
-      availabilityMode: "default",
-      serviceDays: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-      serviceHours: defaultServiceHours,
-      isAvailable: true,
-      duration: "",
-    },
+    defaultValues: fetchedService,
   })
+
+  // const form = useForm({
+  //   defaultValues: {
+  //     serviceName: "",
+  //     description: "",
+  //     image: null,
+  //     availabilityMode: "default",
+  //     serviceDays: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+  //     serviceHours: defaultServiceHours,
+  //     isAvailable: true,
+  //     duration: "",
+  //   },
+  // })
 
   const onSubmit = (data: any) => {
     console.log("Submitted Data:", data)
