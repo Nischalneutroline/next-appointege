@@ -12,7 +12,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import { CalendarDays, Clock, Plus, Trash2 } from "lucide-react"
+import {
+  CalendarDays,
+  Clock,
+  History,
+  Hourglass,
+  Plus,
+  Trash2,
+} from "lucide-react"
 import BusinessHourSelector from "./business-hour-selector"
 import AvailabilityTabs from "@/components/custom-form-fields/availability-tabs"
 import BusinessDaysField from "@/components/custom-form-fields/business-settings/business-day-field"
@@ -25,7 +32,14 @@ const defaultValues = {
   holidays: ["Sat", "Sun"],
   availabilityMode: "default",
   businessHours: {
-    Mon: { work: [["09:00 AM", "05:00 PM"]], break: [] },
+    Mon: {
+      work: [["08:00 AM", "10:00 AM"]],
+      break: [
+        ["12:00 PM", "02:00 PM"],
+        ["02:00 PM", "03:00 PM"],
+        ["03:00 PM", "04:00 PM"],
+      ],
+    },
     Tue: { work: [["09:00 AM", "05:00 PM"]], break: [] },
     Wed: { work: [["09:00 AM", "05:00 PM"]], break: [] },
     Thu: { work: [["09:00 AM", "05:00 PM"]], break: [] },
@@ -61,7 +75,7 @@ export default function BusinessSettingsForm() {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Availability Mode */}
-        <AvailabilityTabs name="availabilityMode" />
+        <AvailabilityTabs name="availabilityMode" icon={CalendarDays} />
 
         {/* Time Zone Field */}
         <TimeZoneField name="timeZone" />
@@ -70,7 +84,7 @@ export default function BusinessSettingsForm() {
         <BusinessDaysField name="businessDays" holidayFieldName="holidays" />
 
         {/* Business Hours */}
-        <BusinessHourSelector name="businessHours" />
+        <BusinessHourSelector name="businessHours" icon={Hourglass} />
 
         {/* Holidays */}
         <HolidayField name="holidays" disableFieldName="businessDays" />
@@ -95,7 +109,10 @@ const TimeZoneField = ({ name }: { name: string }) => {
   const value = watch(name)
   return (
     <div className="space-y-1 ">
-      <Label>Time Zone</Label>
+      <div className="flex gap-2 items-center">
+        <History className="size-4 text-gray-500" />
+        <Label>Time Zone</Label>
+      </div>
       <Select value={value} onValueChange={(val) => setValue(name, val)}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select Time Zone" />

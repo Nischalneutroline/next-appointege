@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import FormHeader from "@/components/admin/form-header"
 import { useRouter } from "next/navigation"
 import DatePickerField from "@/components/custom-form-fields/date-field"
+import { Mail, SlidersHorizontal, UserPen } from "lucide-react"
 
 const serviceOptions = [
   { label: "Consultation", value: "consultation" },
@@ -62,14 +63,20 @@ const AppointmentForm = () => {
         description="View and manage your upcoming appointments"
       />
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 mt-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 ">
           <div className="grid grid-cols-2 gap-4">
             <InputField
               name="firstName"
               label="First Name"
               placeholder="John"
+              icon={UserPen}
             />
-            <InputField name="lastName" label="Last Name" placeholder="Doe" />
+            <InputField
+              name="lastName"
+              label="Last Name"
+              placeholder="Doe"
+              icon={UserPen}
+            />
           </div>
 
           <InputField
@@ -77,6 +84,7 @@ const AppointmentForm = () => {
             label="Email"
             type="email"
             placeholder="john@example.com"
+            icon={Mail}
           />
 
           <PhoneInputField
@@ -89,9 +97,11 @@ const AppointmentForm = () => {
             name="service"
             label="Select a Service"
             options={serviceOptions}
+            icon={SlidersHorizontal}
+            placeholder="Select a service"
           />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 items-center gap-4">
             <DatePickerField
               name="date"
               label="Appointment Date"
@@ -117,7 +127,7 @@ const AppointmentForm = () => {
               className="w-full sm:w-auto hover:opacity-95 active:translate-y-0.5 transition-transform duration-200"
               onClick={handleBack}
             >
-              Back
+              ← Back
             </Button>
             <Button
               type="submit"

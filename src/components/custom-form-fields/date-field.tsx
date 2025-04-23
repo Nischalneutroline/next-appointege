@@ -1,8 +1,7 @@
-// components/custom/date-picker-field.tsx
 "use client"
 
 import { format, addDays } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, LucideIcon } from "lucide-react"
 import {
   Popover,
   PopoverTrigger,
@@ -18,28 +17,39 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { cn } from "@/lib/utils"
+import { useFormContext } from "react-hook-form"
 
-interface Props {
+interface DatePickerFieldProps {
   name: string
-  label?: string
+  label: string
   placeholder?: string
   minDate?: Date
   maxDate?: Date
+  icon?: LucideIcon
+  className?: string // Fixed: Changed from LucideIcon to string
 }
 
 const DatePickerField = ({
   name,
-  label = "Select Date",
+  label,
   placeholder = "Pick a date",
   minDate = new Date(),
-  maxDate = addDays(new Date(), 30), // default: today to 30 days later
-}: Props) => {
+  maxDate = addDays(new Date(), 30),
+  icon: Icon = CalendarIcon,
+  className,
+}: DatePickerFieldProps) => {
+  const { control } = useFormContext()
+
   return (
     <FormField
+      control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-col space-y-2">
-          <FormLabel>{label}</FormLabel>
+        <FormItem className={cn("flex flex-col", className)}>
+          <div className="flex gap-2 items-center">
+            {Icon && <Icon className="size-4 text-gray-500" />}
+            <FormLabel>{label}</FormLabel>
+          </div>
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>
@@ -55,7 +65,7 @@ const DatePickerField = ({
                   ) : (
                     <span>{placeholder}</span>
                   )}
-                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  <Icon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
               </FormControl>
             </PopoverTrigger>
@@ -63,7 +73,7 @@ const DatePickerField = ({
               <Calendar
                 mode="single"
                 selected={field.value}
-                onSelect={field.onChange}
+                onSelect={(date) => field.onChange(date)}
                 disabled={(date) => date < minDate || date > maxDate}
                 initialFocus
               />

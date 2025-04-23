@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { cn } from "@/lib/utils" // utility for conditionally joining classNames
-import { CircleAlert } from "lucide-react"
+import { CalendarRange, CircleAlert, Hourglass } from "lucide-react"
 
 // List of days to render as toggleable buttons and checkboxes
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -37,7 +37,10 @@ const ServiceDaySelector = ({ name }: { name: string }) => {
   return (
     <div className="space-y-2">
       {/* Label for accessibility */}
-      <Label>Service Days</Label>
+      <div className="flex items-center gap-2">
+        {<CalendarRange className="size-4 text-gray-500" />}
+        <Label>Service Days</Label>
+      </div>
 
       {/* Flex container for checkbox + button pairs */}
       <div className="flex gap-4 flex-wrap">
@@ -73,10 +76,7 @@ const ServiceDaySelector = ({ name }: { name: string }) => {
       </div>
       <div className="flex gap-1 items-center">
         <span>
-          <CircleAlert
-            className="si
-          ze-4 opacity-50 text-white fill-blue-500"
-          />
+          <CircleAlert strokeWidth={1.5} className="size-4 " />
         </span>
         <p className="text-xs text-muted-foreground">
           Default Service days are set based on working days. To modify, update

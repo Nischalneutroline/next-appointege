@@ -9,15 +9,16 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { useFormContext } from "react-hook-form"
-import { cn } from "@/lib/utils" // Make sure this is a utility to merge classNames
+import { cn } from "@/lib/utils"
+import { LucideIcon } from "lucide-react"
 
-interface InputFieldProps {
+interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string
   label: string
   placeholder?: string
   type?: string
-  className?: string // Allow custom class styling
-  icon?: React.ReactNode
+  className?: string
+  icon?: LucideIcon
 }
 
 const InputField = ({
@@ -25,8 +26,11 @@ const InputField = ({
   label,
   placeholder,
   type = "text",
-  icon,
   className,
+  icon: Icon,
+  value,
+  onChange,
+  ...rest
 }: InputFieldProps) => {
   const { control } = useFormContext()
 
@@ -35,9 +39,9 @@ const InputField = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
-          <div className="flex gap-2">
-            <span>{icon}</span>
+        <FormItem className="flex flex-col ">
+          <div className="flex gap-2 items-center">
+            {Icon && <Icon className="size-4 text-gray-500" />}
             <FormLabel>{label}</FormLabel>
           </div>
           <FormControl>
@@ -45,7 +49,10 @@ const InputField = ({
               {...field}
               type={type}
               placeholder={placeholder}
-              className={cn("w-full", className)} // Merge custom and default classes
+              className={cn("w-full placeholder:text-sm text-sm", className)}
+              value={value !== undefined ? value : field.value}
+              onChange={onChange || field.onChange}
+              {...rest}
             />
           </FormControl>
           <FormMessage />

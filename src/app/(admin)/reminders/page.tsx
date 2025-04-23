@@ -5,11 +5,11 @@ import { CalendarDays } from "lucide-react"
 import Breadcrumbs from "@/components/shared/bread-crumb"
 import PageTabs from "@/features/business-detail/components/page-tabs"
 import { Card } from "@/components/ui/card"
-import BusinessSettingsForm from "@/features/business-detail/components/business-avaialability-form"
-import BusinessDetailForm from "@/features/business-detail/components/business-detail-form"
+import ReminderForm from "@/components/custom-form-fields/reminder/reminder-form"
+import AnnouncementForm from "@/features/reminder/components/announcment/announcement-form"
 
-const BusinessPage = () => {
-  const [activeTab, setActiveTab] = useState("Business Detail")
+const ReminderPage = () => {
+  const [activeTab, setActiveTab] = useState("Reminder")
 
   return (
     <main className="h-full flex flex-col">
@@ -23,19 +23,14 @@ const BusinessPage = () => {
       </div>
       <Card className="h-full overflow-y-auto p-4 md:p-6">
         <PageTabs
+          isReminder
           activeTab={activeTab}
           onTabChange={(tab) => setActiveTab(tab)}
         />
-        {activeTab === "Business Detail" ? (
-          <>
-            <BusinessDetailForm />
-          </>
-        ) : (
-          <BusinessSettingsForm />
-        )}
+        {activeTab === "Reminder" ? <ReminderForm /> : <AnnouncementForm />}
       </Card>
     </main>
   )
 }
 
-export default BusinessPage
+export default ReminderPage

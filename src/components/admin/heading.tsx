@@ -15,7 +15,7 @@ const Heading = ({ title, description, icon }: HeadingProps) => {
         </span>
         <span className="">{icon}</span>
       </div>
-      <p className="text-base md:text-lg">{description}</p>
+      <p className="text-sm lg:text-base">{description}</p>
     </div>
   )
 }

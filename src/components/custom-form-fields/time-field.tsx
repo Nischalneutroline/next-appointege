@@ -16,12 +16,14 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form"
+import { Clock, LucideIcon } from "lucide-react"
 
 interface TimePickerFieldProps {
   name: string
   label?: string
   className?: string
   availableTimeSlots: string[] // List of available time slots
+  icon?: LucideIcon
 }
 
 const TimePickerField = ({
@@ -29,6 +31,7 @@ const TimePickerField = ({
   label,
   className,
   availableTimeSlots,
+  icon: Icon = Clock,
 }: TimePickerFieldProps) => {
   const { control } = useFormContext()
 
@@ -39,8 +42,11 @@ const TimePickerField = ({
 
   return (
     <div className={className}>
-      <FormItem className="space-y-2">
-        {label && <FormLabel>{label}</FormLabel>}
+      <FormItem className="">
+        <div className="flex gap-2 items-center">
+          {Icon && <Icon className="size-4 text-gray-500" />}
+          <FormLabel>{label}</FormLabel>
+        </div>
         <FormControl>
           <Select value={value} onValueChange={onChange}>
             <SelectTrigger className="w-full">

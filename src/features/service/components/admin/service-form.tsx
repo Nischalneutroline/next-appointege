@@ -11,7 +11,7 @@ import ServiceDaySelector from "@/components/custom-form-fields/serivce/service-
 import ServiceHoursSelector from "@/components/custom-form-fields/serivce/service-hours-selector"
 import ToggleSwitch from "@/components/custom-form-fields/toggle-switch"
 import DurationSelect from "@/components/custom-form-fields/duration-select"
-import { UserRoundCog } from "lucide-react"
+import { CalendarClock, ImageUp, ScrollText, UserRoundCog } from "lucide-react"
 
 // For Edit Form this has to be the data structure to pass in the form
 const fetchedService = {
@@ -76,11 +76,19 @@ export default function ServiceForm() {
             <InputField
               name="serviceName"
               label="Service Name"
-              icon={<UserRoundCog className="size-4" />}
+              icon={UserRoundCog}
             />
-            <TextAreaField name="description" label="Description" />
-            <ImageUploadField name="image" label="Cover Picture" />
-            <AvailabilityTabs name="availabilityMode" />
+            <TextAreaField
+              name="description"
+              label="Description"
+              icon={ScrollText}
+            />
+            <ImageUploadField
+              name="image"
+              label="Cover Picture"
+              icon={ImageUp}
+            />
+            <AvailabilityTabs name="availabilityMode" icon={CalendarClock} />
             <ServiceDaySelector name="serviceDays" />
             <ServiceHoursSelector name="serviceHours" />
             <div className="flex flex-col md:flex-row gap-4  justify-between">

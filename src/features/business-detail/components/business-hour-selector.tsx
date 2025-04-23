@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import { CalendarDays, Plus, Trash2 } from "lucide-react"
+import { CalendarDays, LucideIcon, Plus, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 
 const timeOptions = [
@@ -32,7 +32,13 @@ const timeOptions = [
 
 const defaultBreak = ["12:00 PM", "01:00 PM"]
 
-const BusinessHourSelector = ({ name }: { name: string }) => {
+const BusinessHourSelector = ({
+  name,
+  icon: Icon = CalendarDays,
+}: {
+  name: string
+  icon?: LucideIcon
+}) => {
   const { watch, setValue } = useFormContext()
 
   const businessDays = watch("businessDays") || []
@@ -111,7 +117,9 @@ const BusinessHourSelector = ({ name }: { name: string }) => {
 
   const removeSlot = (day: string, type: "work" | "break", index: number) => {
     const updated = { ...businessHours }
-    updated[day][type] = updated[day][type].filter((_, i) => i !== index)
+    updated[day][type] = updated[day][type].filter(
+      (_: any, i: number) => i !== index
+    )
     setValue(name, updated, { shouldValidate: true })
   }
 
@@ -121,13 +129,28 @@ const BusinessHourSelector = ({ name }: { name: string }) => {
   // Get work time options, excluding all break times
   const workTimeOptions = getWorkTimeOptions(breakSlots)
 
+  const convertToMinutes = (time: string): number => {
+    const [hourMin, period] = time.split(" ")
+    let [hour, minute] = hourMin.split(":").map(Number)
+    if (period === "PM" && hour !== 12) hour += 12
+    if (period === "AM" && hour === 12) hour = 0
+    return hour * 60 + minute
+  }
+
+  const isInRange = (time: string, start: string, end: string): boolean => {
+    const t = convertToMinutes(time)
+    return t >= convertToMinutes(start) && t < convertToMinutes(end)
+  }
   return (
-    <div className="space-y-6">
-      <Label>Business Hours</Label>
+    <div className="space-y-2">
+      <div className="flex gap-1">
+        {Icon && <Icon className="size-4 text-gray-500" />}
+        <Label>Business Hours/Day</Label>
+      </div>
 
       {/* Tabs */}
       <div className="flex items-center gap-2">
-        <CalendarDays className="size-5" />
+        <CalendarDays className="size-5 text-gray-500" />
         <div className="flex gap-2 flex-wrap">
           {businessDays
             .filter((day: string) => !holidays.includes(day))
@@ -159,38 +182,69 @@ const BusinessHourSelector = ({ name }: { name: string }) => {
 
           return (
             <div key={type} className="space-y-4">
-              <div className="flex flex-col lg:flex-row gap-2 items-start border p-4">
+              <div className="flex flex-col lg:flex-row gap-2 items-start  p-4">
                 <Label className="pt-2">{label}</Label>
                 <div className="flex flex-col gap-2">
-                  <div className="flex flex-col gap-2">
-                    {slots.map((slot: [string, string], idx: number) => {
-                      const options = isWork ? workTimeOptions : timeOptions
-                      const availableStart = getAvailableTimes(
-                        idx > 0 ? slots[idx - 1][1] : undefined,
-                        options
-                      )
-                      const availableEnd = getAvailableTimes(
-                        slot[0],
-                        options,
-                        true
-                      )
+                  {slots.map((slot: [string, string], idx: number) => {
+                    // ✅ For working slots only, filter out break overlaps
+                    const breakSlots = businessHours[activeDay]?.["break"] || []
+                    const fullOptions = timeOptions
 
-                      return (
-                        <div
-                          key={idx}
-                          className="flex items-center gap-4 justify-center"
+                    const options = isWork
+                      ? fullOptions.filter((time) => {
+                          return !breakSlots.some(([start, end]) =>
+                            isInRange(time, start, end)
+                          )
+                        })
+                      : fullOptions
+
+                    const availableStart = getAvailableTimes(
+                      idx > 0 ? slots[idx - 1][1] : undefined,
+                      options
+                    )
+                    const availableEnd = getAvailableTimes(
+                      slot[0],
+                      options,
+                      true
+                    )
+
+                    return (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-4 justify-center"
+                      >
+                        {/* Start Time */}
+                        <Select
+                          value={slot[0]}
+                          onValueChange={(val) =>
+                            handleChange(activeDay, idx, type, "start", val)
+                          }
                         >
+                          <SelectTrigger className="w-36">
+                            <SelectValue placeholder="Start" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableStart.map((t) => (
+                              <SelectItem key={t} value={t}>
+                                {t}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                        {/* End Time */}
+                        <div className="relative">
                           <Select
-                            value={slot[0]}
+                            value={slot[1]}
                             onValueChange={(val) =>
-                              handleChange(activeDay, idx, type, "start", val)
+                              handleChange(activeDay, idx, type, "end", val)
                             }
                           >
                             <SelectTrigger className="w-36">
-                              <SelectValue placeholder="Start" />
+                              <SelectValue placeholder="End" />
                             </SelectTrigger>
                             <SelectContent>
-                              {availableStart.map((t) => (
+                              {availableEnd.map((t) => (
                                 <SelectItem key={t} value={t}>
                                   {t}
                                 </SelectItem>
@@ -198,42 +252,24 @@ const BusinessHourSelector = ({ name }: { name: string }) => {
                             </SelectContent>
                           </Select>
 
-                          <div className="relative">
-                            <Select
-                              value={slot[1]}
-                              onValueChange={(val) =>
-                                handleChange(activeDay, idx, type, "end", val)
-                              }
+                          {/* Trash icon for extra slots */}
+                          {idx > 0 && (
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => removeSlot(activeDay, type, idx)}
+                              className="absolute -right-10 top-1"
                             >
-                              <SelectTrigger className="w-36">
-                                <SelectValue placeholder="End" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {availableEnd.map((t) => (
-                                  <SelectItem key={t} value={t}>
-                                    {t}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-
-                            {(isWork || idx > 0) && (
-                              <Button
-                                type="button"
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => removeSlot(activeDay, type, idx)}
-                                className="absolute -right-10 top-1"
-                              >
-                                <Trash2 className="w-4 h-4 text-destructive" />
-                              </Button>
-                            )}
-                          </div>
+                              <Trash2 className="w-4 h-4 text-destructive" />
+                            </Button>
+                          )}
                         </div>
-                      )
-                    })}
-                  </div>
+                      </div>
+                    )
+                  })}
 
+                  {/* Add slot button */}
                   <Button
                     type="button"
                     variant="outline"

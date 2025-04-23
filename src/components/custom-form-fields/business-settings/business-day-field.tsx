@@ -5,11 +5,16 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox" // ShadCN Checkbox
 import { cn } from "@/lib/utils"
+import { CalendarDays } from "lucide-react"
 
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
 // Business Days Selector
-const BusinessDaysField = ({ name, holidayFieldName }: any) => {
+const BusinessDaysField = ({
+  name,
+  holidayFieldName,
+  icon: Icon = CalendarDays,
+}: any) => {
   const { watch, setValue } = useFormContext()
   const selected = watch(name) || []
   const holidays = watch(holidayFieldName) || []
@@ -23,7 +28,10 @@ const BusinessDaysField = ({ name, holidayFieldName }: any) => {
 
   return (
     <div className="space-y-1">
-      <Label>Business Days</Label>
+      <div className="flex gap-1">
+        {Icon && <Icon className="size-4 text-gray-500" />}
+        <Label>Business Days</Label>
+      </div>
       <div className="flex gap-4 flex-wrap">
         {days.map((day) => {
           const isSelected = selected.includes(day)

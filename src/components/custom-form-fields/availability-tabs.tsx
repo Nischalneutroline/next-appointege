@@ -2,14 +2,24 @@ import { useFormContext } from "react-hook-form"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
+import { LucideIcon } from "lucide-react"
 
-const AvailabilityTabs = ({ name }: { name: string }) => {
+const AvailabilityTabs = ({
+  name,
+  icon: Icon,
+}: {
+  name: string
+  icon?: LucideIcon
+}) => {
   const { watch, setValue } = useFormContext()
   const value = watch(name)
 
   return (
     <div className="space-y-2">
-      <Label>Availability</Label>
+      <div className="flex items-center gap-2">
+        {Icon && <Icon className="size-4 text-gray-500" />}
+        <Label>Avaiablity</Label>
+      </div>
       <ToggleGroup
         type="single"
         value={value}

@@ -6,12 +6,14 @@ import { PhoneInput } from "react-international-phone"
 import "react-international-phone/style.css"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
+import { LucideIcon, PhoneCall } from "lucide-react"
 
 interface PhoneFieldProps {
   name: string
   label?: string
   placeholder?: string
   className?: string
+  icon?: LucideIcon
 }
 
 const PhoneField = ({
@@ -19,6 +21,7 @@ const PhoneField = ({
   label,
   className,
   placeholder,
+  icon: Icon = PhoneCall,
 }: PhoneFieldProps) => {
   const { control } = useFormContext()
   const {
@@ -27,8 +30,11 @@ const PhoneField = ({
   } = useController({ name, control })
 
   return (
-    <div className={cn("space-y-1", className)}>
-      {label && <Label htmlFor={name}>{label}</Label>}
+    <div className={cn("space-y-2", className)}>
+      <div className="flex gap-2">
+        {Icon && <Icon className="size-4 text-gray-500" />}
+        {label && <Label htmlFor={name}>{label}</Label>}
+      </div>
       <PhoneInput
         defaultCountry="np"
         placeholder={placeholder}

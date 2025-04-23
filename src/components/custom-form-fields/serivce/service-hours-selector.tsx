@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import { CalendarDays, Plus, Trash2 } from "lucide-react"
+import { CalendarDays, Hourglass, Plus, Trash2 } from "lucide-react"
 import { useState } from "react"
 
 // Days to show as toggleable tabs
@@ -94,7 +94,10 @@ const ServiceHourSelector = ({ name }: { name: string }) => {
   return (
     <div className="space-y-4">
       {/* Label */}
-      <Label>Service Hour/Day</Label>
+      <div className="flex items-center gap-2">
+        {<Hourglass className="size-4 text-gray-500" />}
+        <Label>Service Hour/day</Label>
+      </div>
 
       {/* --- Day Tabs --- */}
       <div className="flex gap-2 items-center justify-center">

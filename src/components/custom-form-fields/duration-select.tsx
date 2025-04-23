@@ -7,6 +7,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select"
+import { Clock } from "lucide-react"
 
 const durations = [
   { label: "15 min", value: "15" },
@@ -23,7 +24,10 @@ const DurationSelect = ({ name, label }: { name: string; label: string }) => {
 
   return (
     <div className="space-y-1 flex gap-2 ">
-      <Label>{label}</Label>
+      <div className="flex items-center gap-2">
+        {<Clock className="size-4 text-gray-500" />}
+        <Label>{label}</Label>
+      </div>
       <Select value={selected} onValueChange={(val) => setValue(name, val)}>
         <SelectTrigger>
           <SelectValue placeholder="Select Duration" />
