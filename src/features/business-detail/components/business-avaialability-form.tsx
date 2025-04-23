@@ -92,7 +92,7 @@ export default function BusinessSettingsForm() {
         <HolidayField name="holidays" disableFieldName="businessDays" />
 
         {/* Actions */}
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-4">
           <Button type="submit" className="bg-blue-500 text-white w-full">
             Proceed
           </Button>

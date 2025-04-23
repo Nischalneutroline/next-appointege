@@ -46,12 +46,12 @@ const CheckboxGroupField = ({
       control={control}
       name={name}
       render={() => (
-        <FormItem className={className}>
-          <div className="flex gap-1">
+        <FormItem className={cn("flex flex-col gap-2", className)}>
+          <div className="flex gap-2 ">
             {Icon && <Icon className="size-4 text-gray-500" />}
             <FormLabel>{label}</FormLabel>
           </div>
-          <div className="flex flex-col md:flex-row flex-wrap gap-4">
+          <div className="flex flex-col md:flex-row flex-wrap gap-3">
             {options.map((option) => (
               <div key={option} className="flex items-center gap-2">
                 <FormControl>

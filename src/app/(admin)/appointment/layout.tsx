@@ -17,7 +17,9 @@ const AppointmentLayout = ({ children }: { children: React.ReactNode }) => {
         />
       </PageHeader>
       {/* Scrollable Form Container */}
-      <Card className="overflow-y-auto p-6 h-full">{children}</Card>
+      <Card className="overflow-y-auto p-6 h-full">
+        <AppointmentForm />
+      </Card>
     </main>
   )
 }

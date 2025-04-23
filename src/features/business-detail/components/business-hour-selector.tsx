@@ -173,7 +173,7 @@ const BusinessHourSelector = ({
       </div>
 
       {/* Work & Break side by side */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
+      <div className="flex flex-col md:flex-row lg:gap-6  w-full">
         {["work", "break"].map((type) => {
           const isWork = type === "work"
           const label = isWork ? "Work Hours 🛠️" : "Break Hours ☕"
@@ -259,7 +259,7 @@ const BusinessHourSelector = ({
                               size="icon"
                               variant="ghost"
                               onClick={() => removeSlot(activeDay, type, idx)}
-                              className="absolute -right-10 top-1"
+                              className="absolute -right-10 top-0"
                             >
                               <Trash2 className="w-4 h-4 text-destructive" />
                             </Button>

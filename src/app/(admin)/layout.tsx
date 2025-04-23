@@ -4,7 +4,7 @@ import SidebarMobile from "@/components/admin/sidebar-mobile"
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="relative min-h-screen bg-stone-100 overflow-hidden">
+    <div className="relative min-h-screen  bg-stone-100 overflow-hidden">
       {/* Top Background Gradient */}
       <div className="absolute inset-0 h-[30vh] rounded-b-lg z-0 pointer-events-none bg-gradient" />
 
@@ -17,7 +17,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         {/* Mobile Navbar */}
-        <div className="block lg:hidden fixed top-0 w-full z-50">
+        <div className="block lg:hidden fixed top-0  z-50">
           <SidebarMobile />
         </div>
 
@@ -27,7 +27,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           <Header />
 
           {/* Main Content */}
-          <div className="flex-1 overflow-y-auto shadow">{children}</div>
+          <div className="flex-1 overflow-y-auto  shadow  ">{children}</div>
         </div>
       </div>
     </div>

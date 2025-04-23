@@ -71,8 +71,8 @@ export default function ServiceForm() {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <Card className="w-full h-full">
-          <CardContent className=" space-y-6">
+        <div className="">
+          <div className=" space-y-6">
             <InputField
               name="serviceName"
               label="Service Name"
@@ -98,8 +98,8 @@ export default function ServiceForm() {
             <Button type="submit" className="w-full">
               Save
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </form>
     </FormProvider>
   )

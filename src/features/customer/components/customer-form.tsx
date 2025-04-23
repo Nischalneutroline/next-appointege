@@ -59,7 +59,10 @@ const CustomerForm = () => {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="space-y-6 h-full"
+      >
         <div className="space-y-4">
           <InputField
             name="fullName"

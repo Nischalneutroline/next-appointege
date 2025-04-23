@@ -113,134 +113,131 @@ export default function ReminderForm() {
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Card>
-          <CardHeader>
-            <Tabs
-              defaultValue="Custom"
-              onValueChange={(value) => setValue("reminderCategory", value)}
-            >
-              <TabsList>
-                <TabsTrigger value="Default">Default</TabsTrigger>
-                <TabsTrigger value="Custom">Custom</TabsTrigger>
+        <div>
+          <Tabs
+            defaultValue="Custom"
+            onValueChange={(value) => setValue("reminderCategory", value)}
+          >
+            <TabsList className="">
+              <TabsTrigger value="Default">Default</TabsTrigger>
+              <TabsTrigger value="Custom">Custom</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
+        <div className="space-y-6">
+          {/* Reminder Type */}
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <BetweenHorizonalStart className="size-4 text-gray-500" />
+              <Label>Reminder Type</Label>
+            </div>
+            <Tabs defaultValue={selectedType} className="mt-2">
+              <TabsList className="grid gap-1 grid-cols-5">
+                {reminderTypes.map((type) => (
+                  <TabsTrigger
+                    key={type}
+                    value={type}
+                    className="text-xs"
+                    onClick={() => setValue("type", type)}
+                  >
+                    {type}
+                  </TabsTrigger>
+                ))}
               </TabsList>
             </Tabs>
-          </CardHeader>
+            <p className="text-xs text-muted-foreground mt-1">
+              {selectedType === "Follow-up"
+                ? "📌 Follow up with users after their appointment, requesting feedback or next steps."
+                : selectedType === "Missed"
+                ? "📌 Reminder sent for missed appointments."
+                : selectedType === "Cancellation"
+                ? "📌 Notify users about cancelled appointments."
+                : selectedType === "Custom"
+                ? "📌 Create a custom reminder with flexible scheduling."
+                : "📌 Notify users about their upcoming appointments."}
+            </p>
+          </div>
 
-          <CardContent className="space-y-6">
-            {/* Reminder Type */}
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <BetweenHorizonalStart className="size-4 text-gray-500" />
-                <Label>Reminder Type</Label>
-              </div>
-              <Tabs defaultValue={selectedType} className="mt-2">
-                <TabsList className="grid grid-cols-5">
-                  {reminderTypes.map((type) => (
-                    <TabsTrigger
-                      key={type}
-                      value={type}
-                      className="text-xs"
-                      onClick={() => setValue("type", type)}
-                    >
-                      {type}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
-              <p className="text-xs text-muted-foreground mt-1">
-                {selectedType === "Follow-up"
-                  ? "📌 Follow up with users after their appointment, requesting feedback or next steps."
-                  : selectedType === "Missed"
-                  ? "📌 Reminder sent for missed appointments."
-                  : selectedType === "Cancellation"
-                  ? "📌 Notify users about cancelled appointments."
-                  : selectedType === "Custom"
-                  ? "📌 Create a custom reminder with flexible scheduling."
-                  : "📌 Notify users about their upcoming appointments."}
-              </p>
+          {/* Subject Field */}
+          <InputField
+            name="subject"
+            label="Subject"
+            placeholder="Enter subject"
+            icon={PenLine}
+          />
+
+          {/* Description Field */}
+          <TextAreaField
+            name="description"
+            label="Description"
+            placeholder="Enter description"
+          />
+
+          {/* Appointment Selection */}
+          <ReminderSelectField
+            name="service"
+            label="Choose Service"
+            options={serviceOptions}
+            placeholder="Select service to set reminder"
+            icon={SlidersHorizontal}
+          />
+
+          {/* When to Send */}
+          <div className=" ">
+            <div className="flex gap-1">
+              <Send strokeWidth={1.5} className="size-4 text-gray-500" />
+              <Label>When to send?</Label>
             </div>
+            <CheckboxGroupField
+              name="when"
+              label=""
+              options={whenOptions[selectedType]?.filter(
+                (label) => !label.toLowerCase().includes("schedule")
+              )}
+            />
+            <ScheduleField
+              name="when"
+              label={
+                whenOptions[selectedType]?.find((label) =>
+                  label.toLowerCase().includes("schedule")
+                ) || "Schedule reminder"
+              }
+              dateFieldName="scheduleDate"
+              timeFieldName="scheduleTime"
+            />
+          </div>
 
-            {/* Subject Field */}
-            <InputField
-              name="subject"
-              label="Subject"
-              placeholder="Enter subject"
-              icon={PenLine}
+          {/* non input fields */}
+          <div className="flex flex-col gap-8">
+            {/* Send Via */}
+            <CheckboxGroupField
+              name="sendVia"
+              label="Send via"
+              options={sendViaOptions}
+              icon={AudioWaveform}
             />
 
-            {/* Description Field */}
-            <TextAreaField
-              name="description"
-              label="Description"
-              placeholder="Enter description"
+            {/* Auto Delete */}
+            <RadioGroupField
+              name="autoDelete"
+              label="Auto-delete expired reminder after?"
+              options={autoDeleteOptions}
+              icon={Trash2}
+              className="space-y-2"
             />
+          </div>
+          {/* Message */}
+          <TextAreaField
+            name="message"
+            label="Message"
+            placeholder="Enter message"
+          />
 
-            {/* Appointment Selection */}
-            <ReminderSelectField
-              name="service"
-              label="Choose Service"
-              options={serviceOptions}
-              placeholder="Select service to set reminder"
-              icon={SlidersHorizontal}
-            />
-
-            {/* When to Send */}
-            <div className="space-y-2 ">
-              <div className="flex gap-1">
-                <Send strokeWidth={1.5} className="size-4 text-gray-500" />
-                <Label>When to send?</Label>
-              </div>
-              <CheckboxGroupField
-                name="when"
-                label=""
-                options={whenOptions[selectedType]?.filter(
-                  (label) => !label.toLowerCase().includes("schedule")
-                )}
-              />
-              <ScheduleField
-                name="when"
-                label={
-                  whenOptions[selectedType]?.find((label) =>
-                    label.toLowerCase().includes("schedule")
-                  ) || "Schedule reminder"
-                }
-                dateFieldName="scheduleDate"
-                timeFieldName="scheduleTime"
-              />
-            </div>
-
-            {/* non input fields */}
-            <div className="flex flex-col gap-8">
-              {/* Send Via */}
-              <CheckboxGroupField
-                name="sendVia"
-                label="Send via"
-                options={sendViaOptions}
-                icon={AudioWaveform}
-                className="space-y-2"
-              />
-
-              {/* Auto Delete */}
-              <RadioGroupField
-                name="autoDelete"
-                label="Auto-delete expired reminder after?"
-                options={autoDeleteOptions}
-                icon={Trash2}
-                className="space-y-2"
-              />
-            </div>
-            {/* Message */}
-            <TextAreaField
-              name="message"
-              label="Message"
-              placeholder="Enter message"
-            />
-
-            <Button type="submit" className="w-full">
-              Save
-            </Button>
-          </CardContent>
-        </Card>
+          <Button type="submit" className="w-full">
+            Save
+          </Button>
+        </div>
       </form>
     </FormProvider>
   )

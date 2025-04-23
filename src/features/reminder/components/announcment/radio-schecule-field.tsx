@@ -27,7 +27,7 @@ const AnnouncementRadioScheduleField = ({
   const { watch, setValue } = useFormContext()
 
   return (
-    <FormItem className="space-y-2">
+    <FormItem className="space-y-1">
       <div className="flex gap-2 items-center">
         {Icon && <Icon className="size-4 text-gray-500" />}
         <FormLabel>{label}</FormLabel>

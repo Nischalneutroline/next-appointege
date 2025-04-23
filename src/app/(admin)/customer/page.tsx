@@ -2,6 +2,8 @@ import Heading from "@/components/admin/heading"
 import { HandPlatter } from "lucide-react"
 import Breadcrumbs from "@/components/shared/bread-crumb"
 import CustomerForm from "@/features/customer/components/customer-form"
+import { Card } from "@/components/ui/card"
+import CardWrapper from "@/components/shared/card-wrapper"
 
 const ServicePage = () => {
   return (
@@ -15,9 +17,9 @@ const ServicePage = () => {
         />
       </div>
       {/* Scrollable Form Container */}
-      <div className="flex-1 p-4 lg:p-6 bg-white rounded-lg shadow-xl overflow-y-auto">
+      <CardWrapper>
         <CustomerForm />
-      </div>
+      </CardWrapper>
     </main>
   )
 }

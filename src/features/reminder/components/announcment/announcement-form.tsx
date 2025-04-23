@@ -83,67 +83,65 @@ export default function AnnouncementForm() {
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Card>
-          <CardContent className="space-y-6">
-            {/* Title */}
-            <InputField
-              name="title"
-              label="Title"
-              placeholder="Enter Service Name"
-              icon={PenLine}
+        <div className="space-y-6">
+          {/* Title */}
+          <InputField
+            name="title"
+            label="Title"
+            placeholder="Enter Service Name"
+            icon={PenLine}
+          />
+
+          {/* Message */}
+          <TextAreaField
+            name="message"
+            label="Message"
+            placeholder="Details about your service for users to view..."
+          />
+
+          {/* Target Audience */}
+          <RadioGroupField
+            name="targetAudience"
+            label="Target Audience"
+            options={targetAudienceOptions}
+            icon={ShieldUser}
+          />
+
+          <div className="flex flex-col gap-8">
+            {/* Schedule Announcements */}
+            <AnnouncementRadioScheduleField
+              name="schedule"
+              label="Schedule Announcements"
+              dateFieldName="scheduleDate"
+              timeFieldName="scheduleTime"
+              options={scheduleOptions}
+              icon={Megaphone}
             />
 
-            {/* Message */}
-            <TextAreaField
-              name="message"
-              label="Message"
-              placeholder="Details about your service for users to view..."
+            {/* Show On */}
+            <CheckboxGroupField
+              name="showOn"
+              label="Show on"
+              options={showOnOptions}
+              icon={MessageSquareDot}
             />
 
-            {/* Target Audience */}
+            {/* Auto Delete */}
             <RadioGroupField
-              name="targetAudience"
-              label="Target Audience"
-              options={targetAudienceOptions}
-              icon={ShieldUser}
+              name="autoDelete"
+              label="Auto-delete expired reminder after?"
+              options={autoDeleteOptions}
+              icon={Delete}
             />
+          </div>
 
-            <div className="flex flex-col gap-8">
-              {/* Schedule Announcements */}
-              <AnnouncementRadioScheduleField
-                name="schedule"
-                label="Schedule Announcements"
-                dateFieldName="scheduleDate"
-                timeFieldName="scheduleTime"
-                options={scheduleOptions}
-                icon={Megaphone}
-              />
-
-              {/* Show On */}
-              <CheckboxGroupField
-                name="showOn"
-                label="Show on"
-                options={showOnOptions}
-                icon={MessageSquareDot}
-              />
-
-              {/* Auto Delete */}
-              <RadioGroupField
-                name="autoDelete"
-                label="Auto-delete expired reminder after?"
-                options={autoDeleteOptions}
-                icon={Delete}
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700"
-            >
-              Save
-            </Button>
-          </CardContent>
-        </Card>
+          <Button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700"
+          >
+            Save
+          </Button>
+        </div>
       </form>
     </FormProvider>
   )

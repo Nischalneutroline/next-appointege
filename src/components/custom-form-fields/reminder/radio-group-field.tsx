@@ -9,6 +9,7 @@ import {
   FormLabel,
 } from "@/components/ui/form"
 import { LucideIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface RadioGroupFieldProps {
   name: string
@@ -32,7 +33,7 @@ const RadioGroupField = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={className}>
+        <FormItem className={cn("flex flex-col gap-1", className)}>
           <div className="flex gap-1">
             {Icon && <Icon className="size-4 text-gray-500" />}
             <FormLabel>{label}</FormLabel>
@@ -41,10 +42,10 @@ const RadioGroupField = ({
             <RadioGroup
               value={field.value}
               onValueChange={field.onChange}
-              className="flex gap-4"
+              className="flex gap-4 flex-wrap"
             >
               {options.map((option) => (
-                <div key={option} className="flex items-center gap-1">
+                <div key={option} className="flex   items-center gap-2">
                   <RadioGroupItem value={option} id={option} />
                   <FormLabel htmlFor={option}>{option}</FormLabel>
                 </div>

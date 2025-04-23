@@ -7,6 +7,7 @@ import PageTabs from "@/features/business-detail/components/page-tabs"
 import { Card } from "@/components/ui/card"
 import ReminderForm from "@/components/custom-form-fields/reminder/reminder-form"
 import AnnouncementForm from "@/features/reminder/components/announcment/announcement-form"
+import CardWrapper from "@/components/shared/card-wrapper"
 
 const ReminderPage = () => {
   const [activeTab, setActiveTab] = useState("Reminder")
@@ -21,14 +22,14 @@ const ReminderPage = () => {
           icon={<CalendarDays />}
         />
       </div>
-      <Card className="h-full overflow-y-auto p-4 md:p-6">
+      <CardWrapper>
         <PageTabs
           isReminder
           activeTab={activeTab}
           onTabChange={(tab) => setActiveTab(tab)}
         />
         {activeTab === "Reminder" ? <ReminderForm /> : <AnnouncementForm />}
-      </Card>
+      </CardWrapper>
     </main>
   )
 }

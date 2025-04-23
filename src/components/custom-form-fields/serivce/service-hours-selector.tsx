@@ -182,7 +182,7 @@ const ServiceHourSelector = ({ name }: { name: string }) => {
                       size="icon"
                       variant="ghost"
                       onClick={() => removeSlot(activeDay, idx)}
-                      className="absolute -right-10"
+                      className="absolute -right-8"
                     >
                       <Trash2 className="w-4 h-4 text-destructive" />
                     </Button>

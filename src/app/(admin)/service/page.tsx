@@ -1,7 +1,9 @@
 import Heading from "@/components/admin/heading"
-import { CalendarDays, Hand, HandPlatter } from "lucide-react"
-import AppointmentForm from "@/features/appointment/components/admin/form/appointment-form"
+import { HandPlatter } from "lucide-react"
 import Breadcrumbs from "@/components/shared/bread-crumb"
+import CustomerForm from "@/features/customer/components/customer-form"
+import { Card } from "@/components/ui/card"
+import CardWrapper from "@/components/shared/card-wrapper"
 import ServiceForm from "@/features/service/components/admin/service-form"
 
 const ServicePage = () => {
@@ -10,15 +12,15 @@ const ServicePage = () => {
       <Breadcrumbs />
       <div>
         <Heading
-          title="Create New Service"
-          description="Manage and Customize your offered service"
+          title="Create New Customer"
+          description="Manage and View your customers"
           icon={<HandPlatter />}
         />
       </div>
       {/* Scrollable Form Container */}
-      <div className="flex-1 p-4 lg:p-6 bg-white rounded-lg shadow-xl overflow-y-auto">
+      <CardWrapper>
         <ServiceForm />
-      </div>
+      </CardWrapper>
     </main>
   )
 }
