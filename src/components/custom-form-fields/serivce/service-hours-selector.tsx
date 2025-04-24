@@ -11,11 +11,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import { CalendarDays, Hourglass, Plus, Trash2 } from "lucide-react"
+import { CalendarDays, Hourglass, Plus, Trash2, Info } from "lucide-react"
 import { useMemo, useState } from "react"
 import { toast } from "sonner"
 
-//  helper functions
+// Helper functions
 import { timeOptions, toMin } from "@/lib/lib"
 
 /* ────────────────────────────────────────────────────────────────── */
@@ -80,6 +80,22 @@ const getNextValidStartTime = (
   return options[0] || ""
 }
 
+/* Format break times for display */
+const formatBreaks = (day: Day, breaks: Slot[]) => {
+  if (!breaks || breaks.length === 0) {
+    return `No breaks scheduled for ${day}.`
+  }
+  if (breaks.length === 1) {
+    const [start, end] = breaks[0]
+    return `Break on ${day} is from ${start} to ${end}.`
+  }
+  const breakStrings = breaks.map(([start, end]) => `${start} to ${end}`)
+  const lastBreak = breakStrings.pop()
+  return `Breaks on ${day} are from ${breakStrings.join(
+    ", "
+  )}, and ${lastBreak}.`
+}
+
 /* ────────────────────────────────────────────────────────────────── */
 /* 3. Component                                                     */
 /* ────────────────────────────────────────────────────────────────── */
@@ -125,7 +141,7 @@ export default function ServiceHourSelector({ name, businessBreaks }: Props) {
     return isEnd ? options.slice(index + 1) : options.slice(index)
   }
 
-  // update the time slot
+  // Update the time slot
   const update = (idx: number, pos: 0 | 1, val: string) => {
     const updated = { ...serviceHours }
     const slots = [...(updated[activeDay] || [])]
@@ -187,7 +203,7 @@ export default function ServiceHourSelector({ name, businessBreaks }: Props) {
     setValue(name, updated, { shouldDirty: true })
   }
 
-  //  Remove the time slot
+  // Remove the time slot
   const removeSlot = (idx: number) => {
     const updated = { ...serviceHours }
     updated[activeDay] = updated[activeDay].filter((_, i) => i !== idx)
@@ -288,6 +304,12 @@ export default function ServiceHourSelector({ name, businessBreaks }: Props) {
         <Button variant="outline" className="text-xs gap-1" onClick={addSlot}>
           <Plus className="w-3 h-3" /> Add Time Slot
         </Button>
+
+        {/* Break Time Note */}
+        <div className="mt-2 flex items-start gap-2 rounded-md bg-muted/50 p-3 text-sm text-muted-foreground max-w-md">
+          <Info className="size-4 mt-0.5 flex-shrink-0" />
+          <p>{formatBreaks(activeDay, businessBreaks[activeDay] ?? [])}</p>
+        </div>
       </div>
     </div>
   )

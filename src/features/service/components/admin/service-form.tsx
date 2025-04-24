@@ -35,7 +35,7 @@ const defaultBusinessAvailability: BusinessAvailability = {
     Sat: [],
     Sun: [],
   },
-  holidays: ["Sat", "Sun", "Mon"],
+  holidays: ["Sat", "Sun"],
 }
 
 interface Props {
