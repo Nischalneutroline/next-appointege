@@ -10,7 +10,13 @@ import ServiceDaySelector from "@/components/custom-form-fields/serivce/service-
 import ServiceHoursSelector from "@/components/custom-form-fields/serivce/service-hours-selector"
 import ToggleSwitch from "@/components/custom-form-fields/toggle-switch"
 import DurationSelect from "@/components/custom-form-fields/duration-select"
-import { CalendarClock, ImageUp, ScrollText, UserRoundCog } from "lucide-react"
+import {
+  CalendarClock,
+  ImageUp,
+  ScrollText,
+  UserRoundCog,
+  Info,
+} from "lucide-react"
 import { Toaster } from "sonner"
 
 // Business availability data
@@ -36,6 +42,11 @@ const defaultBusinessAvailability: BusinessAvailability = {
     Sun: [],
   },
   holidays: ["Sat", "Sun"],
+}
+
+/* Format availability settings note */
+const formatAvailabilityNote = () => {
+  return "Holidays and break times are set in Business Availability. Update in Business Settings > Business Availability."
 }
 
 interface Props {
@@ -102,6 +113,11 @@ export default function ServiceForm({
               icon={ImageUp}
             />
             <AvailabilityTabs name="availabilityMode" icon={CalendarClock} />
+            {/* Availability Settings Note */}
+            <div className="flex items-start gap-2 rounded-md bg-muted/50 py-2 px-3 text-xs text-muted-foreground max-w-md">
+              <Info className="size-4 mt-0.5 flex-shrink-0" />
+              <p>{formatAvailabilityNote()}</p>
+            </div>
             <ServiceDaySelector
               name="serviceDays"
               businessAvailability={businessAvailability}

@@ -3,7 +3,7 @@
 import { useFormContext } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Calendar } from "lucide-react"
+import { Calendar, Info } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export type WeekDay = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun"
@@ -18,6 +18,19 @@ interface Props {
 }
 
 const days: WeekDay[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+/* Format holidays for display */
+const formatHolidays = (holidays: WeekDay[]) => {
+  if (!holidays || holidays.length === 0) {
+    return "No holidays scheduled."
+  }
+  if (holidays.length === 1) {
+    return `Holiday on ${holidays[0]}.`
+  }
+  const holidayStrings = [...holidays]
+  const lastHoliday = holidayStrings.pop()
+  return `Holidays are on ${holidayStrings.join(", ")}, and ${lastHoliday}.`
+}
 
 export default function ServiceDaySelector({
   name,
@@ -58,6 +71,11 @@ export default function ServiceDaySelector({
             {day}
           </Button>
         ))}
+      </div>
+      {/* Holiday Note */}
+      <div className="mt-2 flex items-start gap-2 rounded-md bg-muted/50 p-3 text-sm text-muted-foreground max-w-md">
+        <Info className="size-4 mt-0.5 flex-shrink-0" />
+        <p>{formatHolidays(businessAvailability.holidays)}</p>
       </div>
     </div>
   )
