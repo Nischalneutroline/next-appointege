@@ -19,7 +19,7 @@ import { toast } from "sonner"
 /* 1. Business Availability (from props)                            */
 /* ────────────────────────────────────────────────────────────────── */
 export type WeekDay = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun"
-export type BreakRecord = Record<WeekDay, { break: [string, string][] }>
+export type BreakRecord = Record<WeekDay, [string, string][]>
 
 /* ────────────────────────────────────────────────────────────────── */
 /* 2. Constants & Helpers                                           */
@@ -120,7 +120,7 @@ export default function ServiceHourSelector({ name, businessBreaks }: Props) {
 
   /* -------- Filter options to exclude break times, but allow boundaries -------- */
   const workTimeOptions = useMemo(() => {
-    const breaks = businessBreaks[activeDay]?.break ?? []
+    const breaks = businessBreaks[activeDay] ?? []
     return timeOptions.filter((t) => {
       const min = toMin(t)
       // Exclude times strictly inside a break (allow start/end boundaries)
@@ -130,7 +130,7 @@ export default function ServiceHourSelector({ name, businessBreaks }: Props) {
         return min > startMin && min < endMin
       })
     })
-  }, [activeDay])
+  }, [activeDay, businessBreaks])
 
   /* -------- Helpers ---------------------------------------------- */
   const getAvailableTimes = (
@@ -151,7 +151,7 @@ export default function ServiceHourSelector({ name, businessBreaks }: Props) {
 
     // Validate start time
     if (pos === 0) {
-      const breaks = businessBreaks[activeDay]?.break ?? []
+      const breaks = businessBreaks[activeDay] ?? []
       const overlappingBreaks = overlapsBreak(val, breaks)
       if (overlappingBreaks.length > 0) {
         const [breakStart, breakEnd] = overlappingBreaks[0]
@@ -170,7 +170,7 @@ export default function ServiceHourSelector({ name, businessBreaks }: Props) {
     slot[pos] = val
 
     // Validate full slot if both start and end are set
-    const breaks = businessBreaks[activeDay]?.break ?? []
+    const breaks = businessBreaks[activeDay] ?? []
     if (slot[0] && slot[1]) {
       const overlappingBreaks = overlapsBreak(slot as Slot, breaks)
       if (overlappingBreaks.length > 0) {
@@ -197,7 +197,7 @@ export default function ServiceHourSelector({ name, businessBreaks }: Props) {
     const updated = { ...serviceHours }
     const prevSlots = updated[activeDay] || []
     const prevEnd = prevSlots.at(-1)?.[1] ?? ""
-    const breaks = businessBreaks[activeDay]?.break ?? []
+    const breaks = businessBreaks[activeDay] ?? []
     const nextStart = getNextValidStartTime(prevEnd, breaks, workTimeOptions)
     updated[activeDay] = [...prevSlots, [nextStart, ""]]
     setValue(name, updated, { shouldDirty: true })

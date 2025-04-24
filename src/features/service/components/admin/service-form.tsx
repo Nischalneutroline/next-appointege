@@ -2,7 +2,6 @@
 
 import { useForm, FormProvider } from "react-hook-form"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import InputField from "@/components/custom-form-fields/input-field"
 import TextAreaField from "@/components/custom-form-fields/textarea-field"
 import ImageUploadField from "@/components/custom-form-fields/image-upload"
@@ -16,40 +15,61 @@ import { Toaster } from "sonner"
 
 // Business availability data
 export type WeekDay = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun"
-export const businessAvailability = {
-  Mon: {
-    break: [
+export type BusinessAvailability = {
+  breaks: Record<WeekDay, [string, string][]>
+  holidays: WeekDay[]
+}
+
+// Default business availability (for testing, can be overridden by prop)
+const defaultBusinessAvailability: BusinessAvailability = {
+  breaks: {
+    Mon: [
       ["12:00 PM", "01:00 PM"],
       ["02:00 PM", "03:00 PM"],
       ["04:00 PM", "05:00 PM"],
     ],
+    Tue: [["02:00 PM", "04:00 PM"]],
+    Wed: [],
+    Thu: [],
+    Fri: [],
+    Sat: [],
+    Sun: [],
   },
-  Tue: { break: [["02:00 PM", "04:00 PM"]] },
-  Wed: { break: [] },
-  Thu: { break: [] },
-  Fri: { break: [] },
-  Sat: { break: [] },
-  Sun: { break: [] },
-} satisfies Record<WeekDay, { break: [string, string][] }>
-
-const defaultServiceHours = {
-  Mon: [["09:00 AM", "05:00 PM"]],
-  Tue: [["09:00 AM", "05:00 PM"]],
-  Wed: [["09:00 AM", "05:00 PM"]],
-  Thu: [["09:00 AM", "05:00 PM"]],
-  Fri: [["09:00 AM", "05:00 PM"]],
-  Sat: [["09:00 AM", "05:00 PM"]],
-  Sun: [["09:00 AM", "05:00 PM"]],
+  holidays: ["Sat", "Sun", "Mon"],
 }
 
-export default function ServiceForm() {
+interface Props {
+  businessAvailability?: BusinessAvailability
+}
+
+export default function ServiceForm({
+  businessAvailability = defaultBusinessAvailability,
+}: Props) {
+  const days: WeekDay[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+  // Dynamically set default serviceDays to exclude holidays
+  const defaultServiceDays = days.filter(
+    (day) => !businessAvailability.holidays.includes(day)
+  )
+
+  // Dynamically set default serviceHours, empty for holidays
+  const defaultServiceHours = days.reduce(
+    (acc, day) => ({
+      ...acc,
+      [day]: businessAvailability.holidays.includes(day)
+        ? []
+        : [["09:00 AM", "05:00 PM"]],
+    }),
+    {} as Record<WeekDay, [string, string][]>
+  )
+
   const form = useForm({
     defaultValues: {
       serviceName: "",
       description: "",
       image: null,
       availabilityMode: "default",
-      serviceDays: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+      serviceDays: defaultServiceDays,
       serviceHours: defaultServiceHours,
       isAvailable: true,
       duration: "",
@@ -82,10 +102,13 @@ export default function ServiceForm() {
               icon={ImageUp}
             />
             <AvailabilityTabs name="availabilityMode" icon={CalendarClock} />
-            <ServiceDaySelector name="serviceDays" />
+            <ServiceDaySelector
+              name="serviceDays"
+              businessAvailability={businessAvailability}
+            />
             <ServiceHoursSelector
               name="serviceHours"
-              businessBreaks={businessAvailability}
+              businessBreaks={businessAvailability.breaks}
             />
             <div className="flex flex-col md:flex-row gap-4 justify-between">
               <ToggleSwitch name="isAvailable" label="Availability" />
